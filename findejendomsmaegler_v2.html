@@ -1,0 +1,3499 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FindEjendomsmægler.nu – Find din rigtige mægler gratis</title>
+  <meta name="description" content="Gratis matching med de 3 bedste lokale ejendomsmæglere. Svar inden for 48 timer. Betroet af 12.000+ boligsælgere i Danmark."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <style>
+    /* =========================================================
+       DESIGN TOKENS
+    ========================================================= */
+    :root {
+      --bg: #FAFAF8;
+      --bg-warm: #F5F0E8;
+      --bg-dark: #0A0A0F;
+      --card: #FFFFFF;
+      --text: #1C1C1E;
+      --text-2: #3A3A3C;
+      --text-3: #6E6E73;
+      --text-4: #AEAEB2;
+      --blue: #0071E3;
+      --blue-hover: #0060C7;
+      --gold: #D4A017;
+      --green: #34C759;
+      --red: #FF3B30;
+      --border: rgba(0,0,0,0.07);
+      --radius-card: 20px;
+      --radius-lg: 28px;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.07);
+      --shadow-hover: 0 4px 8px rgba(0,0,0,0.05), 0 20px 40px rgba(0,0,0,0.12);
+      --transition: 200ms ease;
+    }
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; }
+    input, select, textarea { font-family: inherit; }
+
+    /* =========================================================
+       LAYOUT UTILITIES
+    ========================================================= */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 max(24px, calc(50vw - 580px));
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      height: 68px;
+      background: rgba(250,250,248,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(24px, calc(50vw - 580px));
+      transition: box-shadow var(--transition);
+    }
+    header.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+
+    .logo {
+      font-weight: 800;
+      font-size: 18px;
+      text-decoration: none;
+      color: inherit;
+      letter-spacing: -0.3px;
+    }
+    .logo em { color: var(--blue); font-style: normal; }
+
+    nav { display: flex; align-items: center; gap: 28px; }
+    nav a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-3);
+      transition: color var(--transition);
+    }
+    nav a:hover { color: var(--text); }
+
+    .btn-blue {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+    .btn-blue:hover {
+      background: var(--blue-hover);
+      box-shadow: 0 4px 16px rgba(0,113,227,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-blue:active { transform: translateY(0); }
+
+    .btn-sm { padding: 8px 18px; font-size: 13px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+    }
+    .btn-outline:hover {
+      border-color: var(--text-3);
+      background: rgba(0,0,0,0.03);
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--text);
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      background: rgba(250,250,248,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px max(24px, calc(50vw - 580px));
+      z-index: 499;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-of-type { border-bottom: none; }
+    .mobile-menu .btn-blue { margin-top: 12px; width: 100%; }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+      header .btn-blue:not(.btn-sm) { display: none; }
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 80px 0 100px;
+      min-height: 760px;
+      display: flex;
+      align-items: center;
+    }
+    .hero-mesh {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .mesh-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+    .mesh-blob-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,113,227,0.18), transparent 70%);
+      top: -200px; left: -150px;
+      animation: blobFloat1 18s ease-in-out infinite alternate;
+    }
+    .mesh-blob-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(212,160,23,0.12), transparent 70%);
+      bottom: -100px; right: -100px;
+      animation: blobFloat2 22s ease-in-out infinite alternate;
+    }
+    .mesh-blob-3 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(52,199,89,0.08), transparent 70%);
+      top: 40%; left: 50%;
+      transform: translateX(-50%);
+      animation: blobFloat3 15s ease-in-out infinite alternate;
+    }
+    @keyframes blobFloat1 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(60px, 50px) scale(1.1); }
+    }
+    @keyframes blobFloat2 {
+      from { transform: translate(0,0); }
+      to   { transform: translate(-50px,-40px) scale(0.95); }
+    }
+    @keyframes blobFloat3 {
+      from { transform: translateX(-50%) scale(1); }
+      to   { transform: translateX(-45%) scale(1.12); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 max(24px, calc(50vw - 580px));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-card);
+    }
+    .live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: livePulse 2s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .hero-h1 {
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .hero-h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--blue), #5AC8FA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-3);
+      line-height: 1.65;
+      max-width: 540px;
+      margin-bottom: 36px;
+    }
+
+    .hero-form-card {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.10);
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 28px;
+    }
+    .hero-form-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .hf-input-group {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0 14px;
+      height: 52px;
+      transition: border-color var(--transition);
+    }
+    .hf-input-group:focus-within { border-color: var(--blue); }
+    .hf-input-group svg { flex-shrink: 0; color: var(--text-3); }
+    .hf-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+    }
+    .hf-input::placeholder { color: var(--text-4); }
+    .hf-select {
+      height: 52px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      cursor: pointer;
+      transition: border-color var(--transition);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    .hf-select:focus { border-color: var(--blue); }
+    .hf-btn {
+      height: 52px;
+      padding: 0 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .hero-form-row { flex-direction: column; }
+      .hf-input-group, .hf-select, .hf-btn { width: 100%; }
+      .hf-btn { height: 48px; }
+    }
+
+    /* Trust pill */
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 48px;
+    }
+    .avatar-stack {
+      display: flex;
+      align-items: center;
+    }
+    .avatar-stack img {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: -8px;
+      object-fit: cover;
+    }
+    .avatar-stack img:first-child { margin-left: 0; }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 32px;
+      box-shadow: var(--shadow-card);
+    }
+    .stat { text-align: center; padding: 0 28px; }
+    .stat-n {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-l { font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .hero-stats { flex-wrap: wrap; padding: 16px; gap: 12px; }
+      .stat { padding: 8px 12px; }
+      .stat-divider { display: none; }
+    }
+
+    /* =========================================================
+       BRANDS MARQUEE
+    ========================================================= */
+    .brands-section {
+      padding: 48px 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .brands-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .brands-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-4);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .marquee-outer { overflow: hidden; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      gap: 64px;
+      animation: marqueeSlide 30s linear infinite;
+    }
+    .marquee-track-reverse { animation-direction: reverse; }
+    .marquee-outer:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marqueeSlide {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .brand-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      opacity: 0.55;
+      transition: opacity var(--transition);
+      cursor: default;
+    }
+    .brand-item:hover { opacity: 1; }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    /* =========================================================
+       SECTION COMPONENTS
+    ========================================================= */
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .section-h2 {
+      font-size: clamp(28px, 3.5vw, 46px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-3);
+      line-height: 1.7;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    /* =========================================================
+       HOW IT WORKS
+    ========================================================= */
+    .steps-section {
+      padding: 96px 0;
+      background: var(--bg);
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 36px 28px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .step-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+    }
+    .step-number {
+      font-size: 72px;
+      font-weight: 900;
+      color: rgba(0,113,227,0.07);
+      line-height: 1;
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      letter-spacing: -3px;
+      pointer-events: none;
+    }
+    .step-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: #EBF4FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .step-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .step-card p { font-size: 15px; color: var(--text-3); line-height: 1.7; }
+    @media (max-width: 768px) {
+      .steps-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+    }
+
+    /* =========================================================
+       BENTO GRID
+    ========================================================= */
+    .bento-section {
+      padding: 96px 0;
+      background: var(--bg-warm);
+    }
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 190px;
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .bento-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+      overflow: hidden;
+      cursor: default;
+    }
+    .bento-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+    }
+    .bento-a { grid-column: span 2; grid-row: span 2; }
+    .bento-b { grid-column: span 1; grid-row: span 1; }
+    .bento-c { grid-column: span 1; grid-row: span 1; }
+    .bento-d { grid-column: span 2; grid-row: span 1; }
+    .bento-e { grid-column: span 1; grid-row: span 1; }
+    .bento-f { grid-column: span 1; grid-row: span 1; }
+
+    .bento-big-icon { opacity: 0.85; }
+    .bento-metric {
+      font-size: 46px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .bento-metric-sm {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .bento-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-3);
+      line-height: 1.4;
+    }
+    .bento-stars { display: flex; gap: 3px; margin-bottom: 10px; }
+
+    @media (max-width: 768px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento-a { grid-column: span 2; grid-row: span 1; }
+      .bento-d { grid-column: span 2; }
+    }
+    @media (max-width: 480px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-a, .bento-d { grid-column: span 1; }
+    }
+
+    /* =========================================================
+       SOLD CAROUSEL
+    ========================================================= */
+    .sold-section { padding: 96px 0; background: var(--bg); overflow: hidden; }
+    .sold-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .sold-nav { display: flex; gap: 10px; }
+    .sold-nav-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-card);
+    }
+    .sold-nav-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+    .sold-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .sold-outer { overflow: hidden; }
+    .sold-track {
+      display: flex;
+      gap: 20px;
+      padding: 0 max(24px, calc(50vw - 580px)) 12px;
+      transition: transform 450ms cubic-bezier(0.25,0.46,0.45,0.94);
+      will-change: transform;
+    }
+    .sold-card {
+      flex: 0 0 340px;
+      background: var(--card);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: transform 250ms, box-shadow 250ms;
+    }
+    .sold-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+    .sold-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/2;
+    }
+    .sold-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 400ms ease;
+    }
+    .sold-card:hover .sold-img-wrap img { transform: scale(1.05); }
+    .sold-badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: #34C759;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+    .sold-body { padding: 18px 20px 20px; }
+    .sold-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .sold-meta { font-size: 13px; color: var(--text-3); margin-bottom: 8px; }
+    .sold-price { font-size: 17px; font-weight: 800; color: var(--text); }
+
+    /* =========================================================
+       MAP SECTION
+    ========================================================= */
+    .map-section { padding: 96px 0; background: var(--bg-warm); }
+    .map-legend {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+    .legend-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(0,113,227,0.3);
+    }
+    .legend-cluster {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255,255,255,0.8);
+    }
+    .maplibregl-popup-content {
+      border-radius: 16px !important;
+      padding: 18px 20px 20px !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18) !important;
+      max-width: 270px;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+    }
+    .maplibregl-popup-tip { border-top-color: #fff !important; }
+    .maplibregl-popup-close-button {
+      font-size: 20px;
+      color: var(--text-3);
+      padding: 6px 10px !important;
+      line-height: 1;
+      top: 6px !important;
+      right: 6px !important;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .maplibregl-popup-close-button:hover { background: rgba(0,0,0,0.06); }
+    .map-popup-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; color: var(--text); }
+    .map-popup-chain { font-size: 12px; color: var(--text-3); margin-bottom: 8px; }
+    .map-popup-stars { display: flex; gap: 2px; margin-bottom: 12px; }
+    .map-popup-btn {
+      display: block;
+      width: 100%;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      transition: background var(--transition);
+    }
+    .map-popup-btn:hover { background: var(--blue-hover); }
+
+    /* =========================================================
+       TESTIMONIALS
+    ========================================================= */
+    .testi-section {
+      background: var(--bg-dark);
+      padding: 96px 0;
+      overflow: hidden;
+    }
+    .testi-rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+      margin-bottom: 56px;
+    }
+    .testi-stars { display: flex; gap: 4px; }
+    .testi-marquee-outer { overflow: hidden; }
+    .testi-marquee-row {
+      display: flex;
+      width: max-content;
+      gap: 20px;
+      animation: marqueeSlide 35s linear infinite;
+      padding: 10px 0;
+    }
+    .testi-marquee-row-rev {
+      animation-direction: reverse;
+      animation-duration: 40s;
+    }
+    .testi-marquee-outer:hover .testi-marquee-row { animation-play-state: paused; }
+    .testi-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 28px;
+      width: 340px;
+      flex-shrink: 0;
+      transition: background var(--transition);
+    }
+    .testi-card:hover { background: rgba(255,255,255,0.09); }
+    .testi-quote {
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.7;
+      margin: 12px 0 20px;
+    }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testi-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .testi-city { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+    /* =========================================================
+       CTA FORM SECTION
+    ========================================================= */
+    .cta-section {
+      background: #0A0A0F;
+      padding: 96px 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .cta-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .cta-perks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .cta-perks li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+    }
+    .perk-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(52,199,89,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .form-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.3);
+    }
+    .form-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-3);
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+    .form-input {
+      width: 100%;
+      height: 46px;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 0 14px;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .form-input:focus { border-color: var(--blue); }
+    .form-input::placeholder { color: var(--text-4); }
+    select.form-input { cursor: pointer; appearance: none; -webkit-appearance: none; }
+
+    @media (max-width: 900px) {
+      .cta-inner { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       FAQ
+    ========================================================= */
+    .faq-section { padding: 96px 0; background: var(--bg); }
+    .faq-list { margin-top: 48px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-trigger {
+      width: 100%;
+      padding: 22px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: left;
+      gap: 16px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+    }
+    .faq-trigger:hover { color: var(--blue); }
+    .faq-chevron {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      stroke: var(--text-3);
+      transition: transform 250ms;
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-body {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 350ms cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .faq-item.open .faq-body { max-height: 300px; }
+    .faq-text {
+      padding-bottom: 20px;
+      color: var(--text-3);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    footer {
+      background: var(--bg-dark);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+    .footer-logo em { color: var(--blue); font-style: normal; }
+    .footer-tagline { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.9); }
+    .footer-bottom {
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.7;
+    }
+
+    /* =========================================================
+       SOCIAL PROOF TOAST
+    ========================================================= */
+    .sp-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 1500;
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 300px;
+      transform: translateX(-120%);
+      transition: transform 400ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .sp-toast.visible { transform: translateX(0); }
+    .sp-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: #EBF4FF;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sp-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .sp-text { font-size: 12px; color: var(--text-3); }
+    .sp-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(52,199,89,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 2px;
+      display: inline-block;
+    }
+
+    /* =========================================================
+       FLOATING BUTTON
+    ========================================================= */
+    .float-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1500;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 32px rgba(0,113,227,0.4);
+      font-family: 'Inter', sans-serif;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 400ms, opacity 400ms, box-shadow 200ms;
+    }
+    .float-btn.visible {
+      transform: translateY(0);
+      opacity: 1;
+      animation: floatPulse 3s ease-in-out infinite;
+    }
+    .float-btn:hover {
+      box-shadow: 0 12px 40px rgba(0,113,227,0.55);
+      transform: translateY(-2px);
+      animation: none;
+    }
+    @keyframes floatPulse {
+      0%,100% { box-shadow: 0 8px 32px rgba(0,113,227,0.4); }
+      50% { box-shadow: 0 8px 48px rgba(0,113,227,0.7); }
+    }
+
+    /* =========================================================
+       EXIT POPUP
+    ========================================================= */
+    .exit-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,15,0.75);
+      backdrop-filter: blur(10px);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms;
+    }
+    .exit-overlay.open { opacity: 1; pointer-events: all; }
+    .exit-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      transform: scale(0.9);
+      transition: transform 350ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .exit-overlay.open .exit-card { transform: scale(1); }
+
+    /* =========================================================
+       MULTI-STEP MODAL
+    ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,15,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .modal-overlay.open .modal-card { transform: translateY(0); }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    .step-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #E5E5EA;
+      transition: all 200ms;
+    }
+    .step-dot.active {
+      background: var(--blue);
+      width: 24px;
+      border-radius: 4px;
+    }
+    .step-progress {
+      height: 3px;
+      background: #F2F2F7;
+      border-radius: 2px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .step-progress-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 2px;
+      transition: width 300ms ease;
+    }
+    .prop-types {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .prop-type-btn {
+      border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 14px 10px;
+      cursor: pointer;
+      text-align: center;
+      background: #fff;
+      transition: all 150ms;
+    }
+    .prop-type-btn:hover { border-color: var(--blue); background: #EBF4FF; }
+    .prop-type-btn.selected { border-color: var(--blue); background: #EBF4FF; color: var(--blue); }
+    .prop-type-btn svg { display: block; margin: 0 auto 6px; }
+    .prop-type-label { font-size: 12px; font-weight: 600; }
+
+    /* Success check animation */
+    .success-check-circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      animation: checkCircle 0.6s ease forwards;
+    }
+    .success-check-path {
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: checkPath 0.4s ease forwards 0.5s;
+    }
+    @keyframes checkCircle {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes checkPath {
+      to { stroke-dashoffset: 0; }
+    }
+    .success-items { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+    .success-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-2); }
+
+    /* =========================================================
+       PROTECT SECTION (Point 1)
+    ========================================================= */
+    .protect-section {
+      background: var(--bg-warm);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .protect-section::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(0,113,227,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .protect-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-bottom: 64px;
+    }
+    @media (max-width: 768px) { .protect-intro { grid-template-columns: 1fr; gap: 32px; } }
+    .protect-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,113,227,0.08); border: 1px solid rgba(0,113,227,0.18);
+      color: var(--blue); border-radius: 100px;
+      padding: 6px 14px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .protect-h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900; letter-spacing: -1px; line-height: 1.1;
+      color: var(--text); margin-bottom: 16px;
+    }
+    .protect-sub { font-size: 17px; color: var(--text-3); line-height: 1.65; margin-bottom: 28px; }
+    .protect-stat-row { display: flex; gap: 32px; flex-wrap: wrap; }
+    .protect-stat { }
+    .protect-stat-num { font-size: 32px; font-weight: 900; color: var(--blue); letter-spacing: -1px; }
+    .protect-stat-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .protect-visual {
+      background: white; border-radius: 24px;
+      box-shadow: var(--shadow-card);
+      padding: 32px; border: 1px solid var(--border);
+    }
+    .protect-steps { display: flex; flex-direction: column; gap: 0; }
+    .protect-step {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 20px 0; position: relative;
+    }
+    .protect-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px; top: 52px;
+      width: 2px; height: calc(100% - 32px);
+      background: linear-gradient(to bottom, #0071E3, rgba(0,113,227,0.2));
+    }
+    .protect-step-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: #EBF4FF; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .protect-step-body h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .protect-step-body p { font-size: 13px; color: var(--text-3); line-height: 1.55; }
+
+    /* =========================================================
+       COMPARISON SECTION (Point 4)
+    ========================================================= */
+    .compare-section { padding: 96px 0; background: var(--bg); }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px; margin-top: 48px;
+    }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-col {
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+    .compare-col-bad {
+      background: #FAFAFA;
+    }
+    .compare-col-good {
+      background: linear-gradient(135deg, #0A1628 0%, #0D2B5E 100%);
+      border-color: transparent;
+      color: white;
+    }
+    .compare-col-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 24px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .compare-col-bad .compare-col-title { color: var(--text-3); }
+    .compare-col-good .compare-col-title { color: rgba(255,255,255,0.5); }
+    .compare-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid;
+      font-size: 14px; line-height: 1.5;
+    }
+    .compare-col-bad .compare-row { border-color: rgba(0,0,0,0.06); color: var(--text-2); }
+    .compare-col-good .compare-row { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+    .compare-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .compare-icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* =========================================================
+       SCREENING SECTION (Point 5)
+    ========================================================= */
+    .screen-section { padding: 96px 0; background: var(--bg-warm); }
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px; margin-top: 48px;
+    }
+    .screen-card {
+      background: white; border-radius: 20px;
+      padding: 28px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .screen-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    .screen-card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #EBF4FF; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 16px;
+    }
+    .screen-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .screen-card p { font-size: 13px; color: var(--text-3); line-height: 1.6; }
+    .screen-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(52,199,89,0.1); border: 1px solid rgba(52,199,89,0.25);
+      color: #1A7A35; border-radius: 100px;
+      padding: 4px 10px; font-size: 11px; font-weight: 700;
+      margin-top: 12px;
+    }
+
+    /* =========================================================
+       CONTRACT SECTION (Point 3)
+    ========================================================= */
+    .contract-section {
+      padding: 96px 0;
+      background: var(--bg-dark);
+      position: relative; overflow: hidden;
+    }
+    .contract-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,113,227,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .contract-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    @media (max-width: 768px) { .contract-grid { grid-template-columns: 1fr; gap: 40px; } }
+    .contract-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.6); border-radius: 100px;
+      padding: 6px 14px; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .contract-h2 {
+      font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
+      letter-spacing: -1px; line-height: 1.1; color: white; margin-bottom: 16px;
+    }
+    .contract-sub { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.65; margin-bottom: 32px; }
+    .contract-saving {
+      background: rgba(0,113,227,0.15); border: 1px solid rgba(0,113,227,0.3);
+      border-radius: 16px; padding: 20px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .contract-saving-num {
+      font-size: 36px; font-weight: 900; color: #60A5FA;
+      letter-spacing: -1.5px; line-height: 1; flex-shrink: 0;
+    }
+    .contract-saving-text { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+    .contract-saving-text strong { color: white; }
+    .contract-list { display: flex; flex-direction: column; gap: 12px; }
+    .contract-item {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px 20px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .contract-item-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,59,48,0.15); display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .contract-item-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
+    .contract-item-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+    .contract-item-saving {
+      margin-left: auto; flex-shrink: 0;
+      font-size: 12px; font-weight: 700; color: #34C759;
+      background: rgba(52,199,89,0.12); border-radius: 8px;
+      padding: 4px 10px;
+    }
+
+    /* =========================================================
+       TESTIMONIALS UPGRADE (Point 6) — reuse existing .testi-card
+    ========================================================= */
+    .testi-quote-mark { font-size: 32px; line-height: 1; color: var(--gold); margin-bottom: 8px; font-family: Georgia, serif; }
+    .testi-number { font-size: 22px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; margin: 8px 0 4px; }
+    .testi-highlight { background: rgba(212,160,23,0.12); border-radius: 6px; padding: 1px 6px; color: #A07010; font-weight: 700; }
+
+    /* =========================================================
+       NEXT STEPS SECTION (Point 7)
+    ========================================================= */
+    .nextsteps-section { padding: 96px 0; background: var(--bg); }
+    .nextsteps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 20px; margin-top: 48px; position: relative;
+    }
+    @media (max-width: 900px) { .nextsteps-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .nextsteps-grid { grid-template-columns: 1fr; } }
+    .nextstep-card {
+      background: white; border-radius: 20px;
+      padding: 28px 24px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      position: relative; overflow: hidden;
+    }
+    .nextstep-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), #60A5FA);
+    }
+    .nextstep-num {
+      font-size: 48px; font-weight: 900; color: rgba(0,113,227,0.08);
+      line-height: 1; margin-bottom: 12px; letter-spacing: -2px;
+    }
+    .nextstep-icon {
+      width: 40px; height: 40px; border-radius: 11px;
+      background: #EBF4FF; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 14px;
+    }
+    .nextstep-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .nextstep-card p { font-size: 13px; color: var(--text-3); line-height: 1.6; }
+    .nextstep-time {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; color: var(--blue);
+      background: rgba(0,113,227,0.08); border-radius: 100px;
+      padding: 3px 10px; margin-top: 12px;
+    }
+    .nextsteps-cta-row { text-align: center; margin-top: 48px; }
+    .nextsteps-note { font-size: 13px; color: var(--text-4); margin-top: 12px; }
+
+    /* =========================================================
+       REVEAL ANIMATION
+    ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 600ms, transform 600ms cubic-bezier(0.22,0.68,0,1.2);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 80ms; }
+    .reveal-d2 { transition-delay: 160ms; }
+    .reveal-d3 { transition-delay: 240ms; }
+    .reveal-d4 { transition-delay: 320ms; }
+
+    /* =========================================================
+       MAPLIBRE OVERRIDES
+    ========================================================= */
+    .maplibregl-ctrl-logo { display: none !important; }
+    .maplibregl-popup-tip { border-top-color: #fff !important; }
+  </style>
+</head>
+<body>
+
+<!-- =========================================================
+     SOCIAL PROOF TOAST
+========================================================= -->
+<div class="sp-toast" id="sp-toast" role="status" aria-live="polite">
+  <div class="sp-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </div>
+  <div>
+    <div class="sp-name" id="sp-name">Mikkel B.</div>
+    <div class="sp-text" id="sp-text">Fik 3 tilbud på 18 timer</div>
+    <span class="sp-badge">lige nu</span>
+  </div>
+</div>
+
+<!-- =========================================================
+     FLOATING CTA BUTTON
+========================================================= -->
+<button class="float-btn" id="float-btn" onclick="openModal()" aria-label="Kom i gang gratis">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+  </svg>
+  Kom i gang gratis
+</button>
+
+<!-- =========================================================
+     EXIT INTENT MODAL
+========================================================= -->
+<div class="exit-overlay" id="exit-overlay" role="dialog" aria-modal="true" aria-label="Vent – bliv på siden">
+  <div class="exit-card">
+    <button onclick="closeExit()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;padding:8px;color:#6E6E73;border-radius:8px;" aria-label="Luk">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="width:72px;height:72px;background:#FFF3CD;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <h2 style="font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:12px;color:#1C1C1E;">Vent – du sætter penge på spil!</h2>
+    <p style="font-size:15px;color:#6E6E73;line-height:1.65;margin-bottom:24px;">De fleste sælger til <strong style="color:#1C1C1E">under markedsprisen</strong> fordi de vælger den forkerte mægler. Lad os finde de 3 bedste til DIG – gratis.</p>
+    <div style="margin:24px 0">
+      <input type="tel" class="form-input" placeholder="Dit telefonnummer" style="width:100%;margin-bottom:10px"/>
+      <button class="btn-blue" style="width:100%;padding:14px;font-size:15px" onclick="closeExit();openModal()">Ja, find min mægler →</button>
+    </div>
+    <button onclick="closeExit()" style="background:none;border:none;color:#6E6E73;font-size:13px;cursor:pointer;">Nej tak, jeg finder selv</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     MULTI-STEP FORM MODAL
+========================================================= -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Find din mægler">
+  <div class="modal-card">
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.05);border:none;cursor:pointer;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;" aria-label="Luk">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="step-progress"><div class="step-progress-fill" id="step-fill" style="width:33%"></div></div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+    </div>
+
+    <!-- Step 1: Property type -->
+    <div class="step-panel active" id="step-0">
+      <h3 style="font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px;">Hvad type bolig sælger du?</h3>
+      <p style="color:#6E6E73;margin:8px 0 0;font-size:14px">Vælg din boligtype og skriv adressen</p>
+      <div class="prop-types">
+        <button class="prop-type-btn" data-value="Villa" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <div class="prop-type-label">Villa</div>
+        </button>
+        <button class="prop-type-btn" data-value="Rækkehus" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <div class="prop-type-label">Rækkehus</div>
+        </button>
+        <button class="prop-type-btn" data-value="Lejlighed" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="7" x2="9" y2="7"/><line x1="15" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="15" y2="12"/><line x1="9" y1="17" x2="9" y2="17"/><line x1="15" y1="17" x2="15" y2="17"/></svg>
+          <div class="prop-type-label">Lejlighed</div>
+        </button>
+        <button class="prop-type-btn" data-value="Fritidshus" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <div class="prop-type-label">Fritidshus</div>
+        </button>
+        <button class="prop-type-btn" data-value="Andelsbolig" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+          <div class="prop-type-label">Andelsbolig</div>
+        </button>
+      </div>
+      <input type="text" class="form-input" id="m-address" placeholder="Din boligsadresse" style="width:100%;margin-top:8px" aria-label="Boligsadresse"/>
+      <button class="btn-blue" style="width:100%;margin-top:16px;padding:14px;font-size:15px" onclick="nextStep()">Fortsæt →</button>
+    </div>
+
+    <!-- Step 2: Contact info -->
+    <div class="step-panel" id="step-1">
+      <h3 style="font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px;">Dine kontaktoplysninger</h3>
+      <p style="color:#6E6E73;margin:8px 0 20px;font-size:14px">Så vi kan sende dine 3 mæglertilbud</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <label class="form-label" for="m-fname">Fornavn</label>
+          <input type="text" class="form-input" id="m-fname" placeholder="Jens" aria-label="Fornavn"/>
+        </div>
+        <div>
+          <label class="form-label" for="m-lname">Efternavn</label>
+          <input type="text" class="form-input" id="m-lname" placeholder="Jensen" aria-label="Efternavn"/>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <label class="form-label" for="m-email">E-mail</label>
+        <input type="email" class="form-input" id="m-email" placeholder="jens@eksempel.dk" style="width:100%" aria-label="E-mail"/>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="form-label" for="m-phone">Telefon</label>
+        <input type="tel" class="form-input" id="m-phone" placeholder="12 34 56 78" style="width:100%" aria-label="Telefon"/>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-outline" onclick="prevStep()" type="button">← Tilbage</button>
+        <button class="btn-blue" style="flex:1;padding:14px" onclick="submitForm()" type="button">Få mine 3 gratis tilbud →</button>
+      </div>
+      <p style="font-size:11px;color:#AEAEB2;text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Dine data videresælges aldrig. GDPR-kompatibelt.
+      </p>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div class="step-panel" id="step-2" style="text-align:center;padding:20px 0">
+      <svg width="80" height="80" viewBox="0 0 52 52" style="display:block;margin:0 auto" aria-label="Succes">
+        <circle class="success-check-circle" cx="26" cy="26" r="25" fill="none" stroke="#34C759" stroke-width="2"/>
+        <path class="success-check-path" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+      <h3 style="margin-top:24px;font-size:24px;font-weight:800;letter-spacing:-0.5px;">Perfekt! Vi er i gang!</h3>
+      <p style="color:#6E6E73;margin:12px 0 24px;line-height:1.65;font-size:15px;">Vi matcher dig nu med de 3 bedste lokale mæglere. Du hører fra os <strong style="color:#1C1C1E">inden for 24 timer</strong>.</p>
+      <div style="background:#F5F0E8;border-radius:16px;padding:20px;margin-bottom:20px">
+        <div class="success-items">
+          <div class="success-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Gratis matching – ingen skjulte gebyrer
+          </div>
+          <div class="success-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Kun screened og godkendte mæglere
+          </div>
+          <div class="success-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Ingen forpligtelse – du vælger frit
+          </div>
+        </div>
+      </div>
+      <button class="btn-outline" onclick="closeModal()" type="button">Luk</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+<header id="site-header">
+  <a href="#" class="logo" aria-label="FindEjendomsmægler hjem">find<em>ejendoms</em>mægler.nu</a>
+  <nav aria-label="Primær navigation">
+    <a href="#map-sec">Mæglere i Danmark</a>
+    <a href="#steps-sec">Processen</a>
+    <a href="#testi-sec">Anmeldelser</a>
+  </nav>
+  <button class="btn-blue btn-sm" onclick="openModal()" aria-label="Få 3 gratis tilbud">Få 3 gratis tilbud</button>
+  <button class="mobile-menu-btn" aria-label="Åbn menu" id="menu-btn" aria-expanded="false" aria-controls="mobile-menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#map-sec" onclick="closeMobileMenu()">Mæglere i Danmark</a>
+  <a href="#steps-sec" onclick="closeMobileMenu()">Processen</a>
+  <a href="#testi-sec" onclick="closeMobileMenu()">Anmeldelser</a>
+  <button class="btn-blue" onclick="closeMobileMenu();openModal()" style="width:100%;padding:14px;font-size:15px;margin-top:12px;">Få 3 gratis tilbud</button>
+</div>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+<section class="hero" id="hero">
+  <div class="hero-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-live-badge" aria-live="polite">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="live-count">23</span> sælgere søger mægler lige nu
+    </div>
+    <h1 class="hero-h1">
+      Din bolig fortjener<br>
+      <em>den rigtige mægler</em>
+    </h1>
+    <p class="hero-sub">Gratis matching med de 3 bedste lokale mæglere.<br>Svar inden for 48 timer. Ingen forpligtelse overhovedet.</p>
+
+    <!-- Hero inline form -->
+    <div class="hero-form-card">
+      <div class="hero-form-row">
+        <div class="hf-input-group">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <input type="text" class="hf-input" placeholder="Din boligsadresse..." id="hero-address" aria-label="Boligsadresse"/>
+        </div>
+        <select class="hf-select" id="hero-type" aria-label="Boligtype">
+          <option value="">Boligtype</option>
+          <option>Villa</option>
+          <option>Rækkehus</option>
+          <option>Lejlighed</option>
+          <option>Fritidshus</option>
+          <option>Andelsbolig</option>
+        </select>
+        <button class="btn-blue hf-btn" onclick="openModal()" aria-label="Få 3 gratis tilbud">
+          Få 3 gratis tilbud
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust pill -->
+    <div class="trust-pill">
+      <div class="avatar-stack" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+      </div>
+      <span>Betroet af <strong>12.000+</strong> boligsælgere i Danmark</span>
+    </div>
+
+    <!-- Hero stats -->
+    <div class="hero-stats" role="list" aria-label="Nøgletal">
+      <div class="stat" role="listitem">
+        <div class="stat-n" data-count="2400" data-suffix="+">2.400+</div>
+        <div class="stat-l">Godkendte mæglere</div>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat" role="listitem">
+        <div class="stat-n" data-count="98" data-suffix="%">98%</div>
+        <div class="stat-l">Tilfredse sælgere</div>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat" role="listitem">
+        <div class="stat-n">0 kr</div>
+        <div class="stat-l">Det koster dig</div>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat" role="listitem">
+        <div class="stat-n">&lt;48t</div>
+        <div class="stat-l">Til du har svar</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     BRAND MARQUEE
+========================================================= -->
+<section class="brands-section" aria-label="Samarbejdspartnere">
+  <div class="brands-header">
+    <p class="brands-title">Brugt af Danmarks bedste mæglerkæder</p>
+  </div>
+  <div class="marquee-outer" aria-hidden="true">
+    <div class="marquee-track" id="brands-track">
+      <!-- First set -->
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">danbolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">EDC</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#2D3748" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">home</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#D4A017" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="#D4A017" stroke-width="1.5"/></svg>
+        <span class="brand-name">nybolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="brand-name">Realmæglerne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#34C759" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">BoligOne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#805AD5" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="brand-name">estate</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="white"/></svg>
+        <span class="brand-name">Nordbolig</span>
+      </div>
+      <!-- Duplicate set for seamless loop -->
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">danbolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">EDC</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#2D3748" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">home</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#D4A017" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="#D4A017" stroke-width="1.5"/></svg>
+        <span class="brand-name">nybolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="brand-name">Realmæglerne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#34C759" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">BoligOne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#805AD5" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="brand-name">estate</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="white"/></svg>
+        <span class="brand-name">Nordbolig</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     HOW IT WORKS
+========================================================= -->
+<section class="steps-section" id="steps-sec">
+  <div class="container">
+    <div class="section-eyebrow reveal">Processen</div>
+    <h2 class="section-h2 reveal reveal-d1">Tre trin til din nye mægler</h2>
+    <div class="steps-grid reveal reveal-d2">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-number" aria-hidden="true">01</div>
+        <div class="step-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h3>Udfyld formularen</h3>
+        <p>Fortæl os om din bolig og dine ønsker. Det tager under 2 minutter og forpligter dig til absolut ingenting.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-number" aria-hidden="true">02</div>
+        <div class="step-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Vi matcher dig præcist</h3>
+        <p>Vores algoritme sammenligner din bolig med mæglernes dokumenterede resultater og specialer i dit lokalområde.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-number" aria-hidden="true">03</div>
+        <div class="step-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Modtag 3 gratis tilbud</h3>
+        <p>Inden for 24–48 timer kontakter de 3 udvalgte mæglere dig med konkrete tilbud. Du vælger selv hvem du vil møde.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal reveal-d3">
+      <button class="btn-blue" style="padding:14px 32px;font-size:16px" onclick="openModal()">Start nu – det tager under 2 min</button>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SOLD CAROUSEL
+========================================================= -->
+<section class="sold-section">
+  <div class="sold-header container">
+    <div>
+      <div class="section-eyebrow reveal">Solgte boliger</div>
+      <h2 class="section-h2 reveal reveal-d1">Boliger solgt med vores mæglere</h2>
+    </div>
+    <div class="sold-nav">
+      <button class="sold-nav-btn" id="sold-prev" disabled aria-label="Forrige">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="sold-nav-btn" id="sold-next" aria-label="Næste">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sold-outer">
+    <div class="sold-track" id="sold-track">
+      <!-- Card 1 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1570129477492-45c003dc0eeb?w=800&h=533&fit=crop&auto=format&q=80" alt="Strandvej 45, Hellerup" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Strandvej 45, 2900 Hellerup</div>
+          <div class="sold-meta">198 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 4.995.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=533&fit=crop&auto=format&q=80" alt="Elmevej 12, Aarhus" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Elmevej 12, 8000 Aarhus C</div>
+          <div class="sold-meta">145 m² · 4 vær. · Parcelhus</div>
+          <div class="sold-price">Solgt for 3.295.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=533&fit=crop&auto=format&q=80" alt="Højbjergvej 33, Lyngby" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Højbjergvej 33, 2800 Lyngby</div>
+          <div class="sold-meta">165 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 4.195.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=533&fit=crop&auto=format&q=80" alt="Birkevej 8, Birkerød" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Birkevej 8, 3460 Birkerød</div>
+          <div class="sold-meta">182 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 3.895.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=533&fit=crop&auto=format&q=80" alt="Vestergade 7, Odense" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Vestergade 7, 5000 Odense C</div>
+          <div class="sold-meta">112 m² · 4 vær. · Rækkehus</div>
+          <div class="sold-price">Solgt for 2.495.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&h=533&fit=crop&auto=format&q=80" alt="Søndergade 22, Aalborg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Søndergade 22, 9000 Aalborg</div>
+          <div class="sold-meta">130 m² · 4 vær. · Parcelhus</div>
+          <div class="sold-price">Solgt for 2.895.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 7 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=533&fit=crop&auto=format&q=80" alt="Gammel Kongevej 18, Frederiksberg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Gammel Kongevej 18, 1850 Frbg</div>
+          <div class="sold-meta">95 m² · 3 vær. · Lejlighed</div>
+          <div class="sold-price">Solgt for 3.195.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 8 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&h=533&fit=crop&auto=format&q=80" alt="Havnegade 5, Esbjerg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Havnegade 5, 6700 Esbjerg</div>
+          <div class="sold-meta">140 m² · 4 vær. · Villa</div>
+          <div class="sold-price">Solgt for 2.195.000 kr.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     PROTECT SECTION (Point 1) — Din boligadvokat
+========================================================= -->
+<section class="protect-section">
+  <div class="container">
+    <div class="protect-intro">
+      <div class="reveal">
+        <div class="protect-eyebrow">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          Din boligadvokat
+        </div>
+        <h2 class="protect-h2">Vi passer på dig<br>— uden advokatprisen</h2>
+        <p class="protect-sub">De fleste sælgere skriver under på en kontrakt de ikke har forstået. Vi gennemgår den for dig, forhandler salæret og sikrer du aldrig betaler for meget.</p>
+        <div class="protect-stat-row">
+          <div class="protect-stat">
+            <div class="protect-stat-num">34.000</div>
+            <div class="protect-stat-label">kr. sparet i gennemsnit på salæret</div>
+          </div>
+          <div class="protect-stat">
+            <div class="protect-stat-num">100%</div>
+            <div class="protect-stat-label">gratis — du betaler kun ved salg</div>
+          </div>
+        </div>
+      </div>
+      <div class="protect-visual reveal reveal-d2">
+        <div class="protect-steps">
+          <div class="protect-step">
+            <div class="protect-step-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="protect-step-body">
+              <h4>Vi finder de bedste mæglere i dit område</h4>
+              <p>Baseret på dokumenterede salgsresultater, salgstid og kundeanmeldelser — ikke tilfældighed.</p>
+            </div>
+          </div>
+          <div class="protect-step">
+            <div class="protect-step-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <div class="protect-step-body">
+              <h4>Vi gennemgår din kontrakt linje for linje</h4>
+              <p>Inden du skriver under tjekker vi for skjulte klausuler, urimelige bindingsperioder og overprissatte pakker.</p>
+            </div>
+          </div>
+          <div class="protect-step">
+            <div class="protect-step-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="protect-step-body">
+              <h4>Vi forhandler salæret ned for dig</h4>
+              <p>Vi kender markedet og ved præcis hvad der er rimeligt. Du sparer i gennemsnit 34.000 kr.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     COMPARISON SECTION (Point 4) — Uden os vs. Med os
+========================================================= -->
+<section class="compare-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Kend forskellen</div>
+    <h2 class="section-h2 reveal reveal-d1">Hvad sker der, hvis du finder mægler selv?</h2>
+    <p class="section-desc reveal reveal-d2">De fleste sælgere ved ikke, hvad de går glip af — eller hvad de betaler for meget for.</p>
+    <div class="compare-grid reveal reveal-d3">
+      <!-- BAD column -->
+      <div class="compare-col compare-col-bad">
+        <div class="compare-col-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Uden findejendomsmægler.nu
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Du aftaler salær blindt — uden at vide om prisen er fair
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Du læser kontrakten selv — og overser skjulte klausuler
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Du er bundet i 6 måneder, selv hvis mægleren ikke sælger
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Du betaler for markedsføringspakker du ikke behøver
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Du ved ikke om mægleren er god i netop dit område
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Ingen backup — én mægler, ingen sammenligning
+        </div>
+      </div>
+      <!-- GOOD column -->
+      <div class="compare-col compare-col-good">
+        <div class="compare-col-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Med findejendomsmægler.nu
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Vi forhandler salæret ned — du sparer i snit 34.000 kr.
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Vi gennemgår kontrakten linje for linje inden du skriver under
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Vi sikrer fair bindingsperiode og rimelige vilkår for dig
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Vi renser kontrakten for unødvendige pakker og tillæg
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Du får kun mæglere der er dokumenteret gode i dit postnummer
+        </div>
+        <div class="compare-row">
+          <svg class="compare-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          3 tilbud — du sammenligner og vælger det bedste
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal reveal-d4">
+      <button class="btn-blue" style="padding:14px 36px;font-size:16px" onclick="openModal()">Kom i gang gratis — 0 kr. ved ingen salg</button>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SCREENING SECTION (Point 5) — Godkendt mægler
+========================================================= -->
+<section class="screen-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Vores standard</div>
+    <h2 class="section-h2 reveal reveal-d1">Sådan screener vi dine mæglere</h2>
+    <p class="section-desc reveal reveal-d2">Kun mæglere der består alle 5 kriterier kommer igennem — resten fravælges automatisk.</p>
+    <div class="screen-grid">
+      <div class="screen-card reveal">
+        <div class="screen-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h4>Salgspris vs. udbudspris</h4>
+        <p>Vi måler mæglernes evne til at opnå den pris de lover — ingen tomme løfter godkendes.</p>
+        <div class="screen-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Verificeret data
+        </div>
+      </div>
+      <div class="screen-card reveal reveal-d1">
+        <div class="screen-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>Gennemsnitlig salgstid</h4>
+        <p>Vi sammenligner mæglernes salgstid med lokalområdets gennemsnit. Langsomme mæglere vælges fra.</p>
+        <div class="screen-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Lokalt benchmark
+        </div>
+      </div>
+      <div class="screen-card reveal reveal-d2">
+        <div class="screen-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h4>Verificerede kundeanmeldelser</h4>
+        <p>Kun anmeldelser fra dokumenterede salgskunder tæller — ingen falske stjerner.</p>
+        <div class="screen-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Minimum 4.5 / 5 stjerner
+        </div>
+      </div>
+      <div class="screen-card reveal reveal-d3">
+        <div class="screen-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h4>Salær relativt til markedet</h4>
+        <p>Mæglere med urimelige priser sorteres fra. Vi sikrer at du ikke betaler mere end markedet tilsiger.</p>
+        <div class="screen-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Fair-pris garanti
+        </div>
+      </div>
+      <div class="screen-card reveal reveal-d4">
+        <div class="screen-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h4>Specialiseret i dit postnummer</h4>
+        <p>En god mægler i Aarhus er ikke nødvendigvis god i Odense. Vi matcher på lokalkendskab.</p>
+        <div class="screen-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Lokalt matchet
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     MAP SECTION
+========================================================= -->
+<section class="map-section" id="map-sec">
+  <div class="container">
+    <div class="section-eyebrow reveal">Landsdækkende netværk</div>
+    <h2 class="section-h2 reveal reveal-d1">Godkendte mæglere i dit område</h2>
+    <p class="section-desc reveal reveal-d2">Klik på et område for at se de mæglere, vi samarbejder med der — zoom ind for at finde præcis den rigtige mægler til din bolig.</p>
+    <div id="map" style="height:520px;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);" class="reveal reveal-d3" role="img" aria-label="Kort over mæglere i Danmark opdelt efter område"></div>
+    <div class="map-legend reveal reveal-d4">
+      <div class="legend-item">
+        <div style="width:18px;height:18px;border-radius:50%;background:rgba(0,113,227,0.15);border:1.5px solid rgba(0,113,227,0.4);flex-shrink:0" aria-hidden="true"></div>
+        Område — klik for at zoome ind
+      </div>
+      <div class="legend-item">
+        <div class="legend-cluster" aria-hidden="true">5</div>
+        Mægler-klynge
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" aria-hidden="true"></div>
+        Enkelt mægler
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     TESTIMONIALS
+========================================================= -->
+<section class="testi-section" id="testi-sec">
+  <div class="container" style="text-align:center">
+    <div class="section-eyebrow" style="color:rgba(255,255,255,0.5)">Kundeoplevelser</div>
+    <h2 class="section-h2" style="color:white;">Det siger 12.000+ sælgere</h2>
+    <div class="testi-rating" aria-label="Bedømmelse 4.9 ud af 5 baseret på 12.483 anmeldelser">
+      <div class="testi-stars" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <span style="color:white;font-size:28px;font-weight:800;letter-spacing:-0.5px">4.9</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:14px">/5 · Baseret på 12.483 anmeldelser</span>
+    </div>
+  </div>
+  <div aria-hidden="true">
+    <!-- Row 1: scrolls left -->
+    <div class="testi-marquee-outer">
+      <div class="testi-marquee-row">
+        <!-- Card 1 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">+11% over udbudspris</div>
+          <p class="testi-quote">"Vi solgte vores villa <span class="testi-highlight">15% over udbudsprisen på blot 11 dage</span>. Noget vi aldrig selv havde opnået — mægleren kendte alle interesserede køber i vores kvarter."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Mette Kristensen"/>
+            <div>
+              <div class="testi-name">Mette Kristensen</div>
+              <div class="testi-city">Aarhus C</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">41.000 kr. sparet</div>
+          <p class="testi-quote">"De fandt en klausul i min kontrakt der ville have bundet mig i <span class="testi-highlight">6 måneder ekstra</span>. Det rettede de inden jeg skrev under. Og fik forhandlet salæret ned med 41.000 kr."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Lars Jensen"/>
+            <div>
+              <div class="testi-name">Lars Jensen</div>
+              <div class="testi-city">København NV</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">Solgt på 3 uger</div>
+          <p class="testi-quote">"Fra første vurdering til underskrevet aftale tog det kun <span class="testi-highlight">3 uger</span>. Mægleren kendte markedet perfekt og vi endte 8% over den pris vi selv troede vi kunne få."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Sofie Andersen"/>
+            <div>
+              <div class="testi-name">Sofie Andersen</div>
+              <div class="testi-city">Odense C</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(212,160,23,0.3)" stroke="#D4A017" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">Første gang — ingen stress</div>
+          <p class="testi-quote">"Første gang vi solgte bolig — vi anede ikke hvad vi skulle kigge efter i kontrakten. De gennemgik den og <span class="testi-highlight">fjernede 3 klausuler</span> der kunne have kostet os dyrt. Uvurderlig hjælp."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Thomas Nielsen"/>
+            <div>
+              <div class="testi-name">Thomas Nielsen</div>
+              <div class="testi-city">Vejle</div>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate set for seamless loop -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Vi solgte vores villa 15% over udbudsprisen på blot 11 dage. Utrolig service og den rette mægler fra start."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Mette Kristensen"/>
+            <div>
+              <div class="testi-name">Mette Kristensen</div>
+              <div class="testi-city">Aarhus C</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Sparede mindst 40.000 kr i salær. Perfekt match og ingen skjulte udgifter. Kan klart anbefales til alle."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Lars Jensen"/>
+            <div>
+              <div class="testi-name">Lars Jensen</div>
+              <div class="testi-city">København NV</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Fra første vurdering til underskrevet aftale tog det kun 3 uger. Mægleren kendte markedet perfekt."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Sofie Andersen"/>
+            <div>
+              <div class="testi-name">Sofie Andersen</div>
+              <div class="testi-city">Odense C</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(212,160,23,0.3)" stroke="#D4A017" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Første gang vi solgte bolig – vi følte os trygge hele vejen. De screenede mæglere var professionelle og ærlige."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Thomas Nielsen"/>
+            <div>
+              <div class="testi-name">Thomas Nielsen</div>
+              <div class="testi-city">Vejle</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Row 2: scrolls right -->
+    <div class="testi-marquee-outer" style="margin-top:20px">
+      <div class="testi-marquee-row testi-marquee-row-rev">
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Mægleren kendte vores kvarter som sin egen bukselomme. Solgt på 9 dage til fuld udbudspris!"</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Rasmus P."/>
+            <div>
+              <div class="testi-name">Rasmus P.</div>
+              <div class="testi-city">Roskilde</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Super nemt – jeg udfyldte formularen på 90 sekunder og havde 3 konkrete tilbud samme dag næste morgen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Anette L."/>
+            <div>
+              <div class="testi-name">Anette L.</div>
+              <div class="testi-city">Silkeborg</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Ville aldrig have fundet den her mægler selv. Han kendte alle de potentielle købere i området i forvejen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Kim M."/>
+            <div>
+              <div class="testi-name">Kim M.</div>
+              <div class="testi-city">Horsens</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Professionel screening betyder alt. Vi undgik en dårlig mægler og fandt en fantastisk en i stedet."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Lene K."/>
+            <div>
+              <div class="testi-name">Lene K.</div>
+              <div class="testi-city">Esbjerg</div>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate for loop -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Mægleren kendte vores kvarter som sin egen bukselomme. Solgt på 9 dage til fuld udbudspris!"</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Rasmus P."/>
+            <div>
+              <div class="testi-name">Rasmus P.</div>
+              <div class="testi-city">Roskilde</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Super nemt – jeg udfyldte formularen på 90 sekunder og havde 3 konkrete tilbud samme dag næste morgen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Anette L."/>
+            <div>
+              <div class="testi-name">Anette L.</div>
+              <div class="testi-city">Silkeborg</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Ville aldrig have fundet den her mægler selv. Han kendte alle de potentielle købere i området i forvejen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Kim M."/>
+            <div>
+              <div class="testi-name">Kim M.</div>
+              <div class="testi-city">Horsens</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Professionel screening betyder alt. Vi undgik en dårlig mægler og fandt en fantastisk en i stedet."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Lene K."/>
+            <div>
+              <div class="testi-name">Lene K.</div>
+              <div class="testi-city">Esbjerg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     NEXT STEPS SECTION (Point 7) — Hvad sker der bagefter
+========================================================= -->
+<section class="nextsteps-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Ingen gætterier</div>
+    <h2 class="section-h2 reveal reveal-d1">Hvad sker der, når du udfylder formularen?</h2>
+    <p class="section-desc reveal reveal-d2">Vi ved, at det er en stor beslutning. Derfor er processen 100% transparent — trin for trin.</p>
+    <div class="nextsteps-grid">
+      <div class="nextstep-card reveal">
+        <div class="nextstep-num">01</div>
+        <div class="nextstep-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h4>Du udfylder formularen</h4>
+        <p>Fortæl os om din bolig, dit postnummer og dine ønsker. Helt anonymt og uforpligtende.</p>
+        <div class="nextstep-time">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Tager 2 minutter
+        </div>
+      </div>
+      <div class="nextstep-card reveal reveal-d1">
+        <div class="nextstep-num">02</div>
+        <div class="nextstep-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h4>Vi matcher dig med 2–3 mæglere</h4>
+        <p>Baseret på dit postnummer, boligtype og mæglernes dokumenterede resultater i dit område.</p>
+        <div class="nextstep-time">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Inden for 24 timer
+        </div>
+      </div>
+      <div class="nextstep-card reveal reveal-d2">
+        <div class="nextstep-num">03</div>
+        <div class="nextstep-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        </div>
+        <h4>Vi gennemgår din kontrakt</h4>
+        <p>Inden du skriver under gennemgår vi kontrakten, retter til og forhandler salæret ned for dig.</p>
+        <div class="nextstep-time">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Inden du forpligter dig
+        </div>
+      </div>
+      <div class="nextstep-card reveal reveal-d3">
+        <div class="nextstep-num">04</div>
+        <div class="nextstep-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h4>Du beslutter selv — ingen pres</h4>
+        <p>Vælg den mægler du er mest tryg ved. Ingen forpligtelse, ingen skjulte gebyrer. Vi tjener kun penge hvis din bolig sælges.</p>
+        <div class="nextstep-time">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          100% uforpligtende
+        </div>
+      </div>
+    </div>
+    <div class="nextsteps-cta-row reveal reveal-d4">
+      <button class="btn-blue" style="padding:15px 40px;font-size:16px;font-weight:800" onclick="openModal()">Ja, find min mægler nu →</button>
+      <p class="nextsteps-note">Gratis · Ingen binding · Betaler kun ved salg</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     LEAD FORM SECTION
+========================================================= -->
+<section class="cta-section" id="form">
+  <div class="cta-inner container">
+    <div class="cta-left reveal">
+      <div class="section-eyebrow" style="color:rgba(255,255,255,0.5)">Kom i gang</div>
+      <h2 style="color:white;font-size:clamp(28px,3.5vw,44px);font-weight:900;letter-spacing:-0.8px;line-height:1.15;margin-bottom:20px;">
+        Klar til at finde<br><em style="color:#FBB03B;font-style:normal;">din mægler?</em>
+      </h2>
+      <p style="color:rgba(255,255,255,0.7);font-size:16px;line-height:1.65;margin-bottom:28px;">
+        Udfyld formularen på under 2 minutter. Vi matcher dig med tre screenede lokale mæglere – du vælger selv.
+      </p>
+      <ul class="cta-perks">
+        <li>
+          <div class="perk-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          Helt gratis – ingen skjulte gebyrer
+        </li>
+        <li>
+          <div class="perk-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          Kun screenede og godkendte mæglere
+        </li>
+        <li>
+          <div class="perk-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          Svar inden for 48 timer
+        </li>
+        <li>
+          <div class="perk-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          Ingen binding – du vælger frit
+        </li>
+        <li>
+          <div class="perk-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          GDPR-kompatibelt – vi beskytter dine data
+        </li>
+      </ul>
+    </div>
+    <div class="form-card reveal reveal-d2">
+      <h3>Start her</h3>
+      <p style="color:#6E6E73;font-size:14px;margin-bottom:24px">Det koster ingenting og forpligter dig til intet</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label class="form-label" for="cf-fname">Fornavn</label>
+          <input type="text" id="cf-fname" class="form-input" placeholder="Jens" autocomplete="given-name"/>
+        </div>
+        <div>
+          <label class="form-label" for="cf-lname">Efternavn</label>
+          <input type="text" id="cf-lname" class="form-input" placeholder="Jensen" autocomplete="family-name"/>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="form-label" for="cf-email">E-mail</label>
+        <input type="email" id="cf-email" class="form-input" style="width:100%" placeholder="jens@eksempel.dk" autocomplete="email"/>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="form-label" for="cf-phone">Telefon</label>
+        <input type="tel" id="cf-phone" class="form-input" style="width:100%" placeholder="12 34 56 78" autocomplete="tel"/>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="form-label" for="cf-addr">Boligens adresse</label>
+        <input type="text" id="cf-addr" class="form-input" style="width:100%" placeholder="Eksempelvej 1, 2000 Frederiksberg" autocomplete="street-address"/>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="form-label" for="cf-type">Boligtype</label>
+        <select id="cf-type" class="form-input" style="width:100%;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;appearance:none;-webkit-appearance:none;cursor:pointer;">
+          <option value="">Vælg boligtype</option>
+          <option>Villa</option>
+          <option>Rækkehus</option>
+          <option>Ejerlejlighed</option>
+          <option>Fritidshus</option>
+          <option>Andelsbolig</option>
+        </select>
+      </div>
+      <button class="btn-blue" style="width:100%;padding:16px;font-size:15px" onclick="handleMainFormSubmit(this)">Få mine 3 gratis mæglertilbud →</button>
+      <p style="font-size:11px;color:#AEAEB2;text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Vi videresælger aldrig dine oplysninger. GDPR-kompatibelt.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FAQ
+========================================================= -->
+<section class="faq-section">
+  <div class="container" style="max-width:720px">
+    <div class="section-eyebrow reveal" style="text-align:center">Spørgsmål</div>
+    <h2 class="section-h2 reveal reveal-d1" style="text-align:center">Ofte stillede spørgsmål</h2>
+    <div class="faq-list reveal reveal-d2">
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Hvad koster det at bruge FindEjendomsmægler.nu?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Absolut ingenting. Vores service er 100% gratis for sælgere. Vi finansieres af en lille formidlingsprovision fra den mægler du vælger – og kun hvis du rent faktisk vælger at bruge en af vores matches. Ingen skjulte gebyrer, ingen abonnement.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Hvordan screener I mæglere?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Vi undersøger salgshistorik, kundeanmeldelser, salgstid i dit lokalområde, salærstruktur og specialkompetencer. Kun mæglere med dokumenterede resultater og ingen negative klager kommer igennem vores screening. Vi opdaterer løbende vores database.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Hvad sker der efter jeg udfylder formularen?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Inden for 24–48 timer kontakter de 3 matchede mæglere dig personligt – enten per telefon eller e-mail – med et konkret tilbud. Du er ikke forpligtet til noget og beslutter selv hvem du vil arbejde med. Der er ingen pres fra vores side.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Er jeg forpligtet til at vælge en af mæglerne?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Slet ikke. Du vælger frit hvem du vil arbejde med – eller ingen af dem. Vores service er uforpligtende fra start til slut. Du kan sagtens bruge vores matches som inspiration og sammenligne med andre mæglere du finder selv.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Hvad hvis jeg ikke er tilfreds med mine matches?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Kontakt os og forklar hvad du ønsker anderledes, så finder vi 3 nye forslag til dig. Din tilfredshed er vores absolut højeste prioritet. Vi har en tilfredshedsgaranti der betyder at vi ikke stopper før du er happy med dine matches.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" aria-expanded="false">
+          Sælger I mine personlige data?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-body" role="region">
+          <p class="faq-text">Aldrig. Vi er fuldt GDPR-kompatible og deler kun dine kontaktoplysninger med de 3 mæglere du matches med – og kun med det formål at de kan kontakte dig med et tilbud. Vi opbevarer ikke dine data længere end nødvendigt og videresælger dem aldrig til tredjeparter.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer>
+  <div class="footer-inner container">
+    <div>
+      <div class="footer-logo">find<em>ejendoms</em>mægler.nu</div>
+      <div class="footer-tagline">Vi finder den rigtige mægler til dig</div>
+    </div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="#">Privatlivspolitik</a>
+      <a href="#">Handelsbetingelser</a>
+      <a href="#">Cookiepolitik</a>
+      <a href="#">Kontakt</a>
+      <a href="#">For mæglere</a>
+    </nav>
+  </div>
+  <div class="footer-bottom container">
+    <p>© 2025 FindEjendomsmægler.nu · CVR: 12345678 · kontakt@findejendomsmægler.nu</p>
+    <p style="margin-top:6px">FindEjendomsmægler.nu er en uafhængig matchingtjeneste og er ikke tilknyttet nogen specifik mæglerkæde.</p>
+    <p style="margin-top:6px;opacity:0.4">Lavet med kærlighed i Danmark</p>
+  </div>
+</footer>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+<script>
+// =========================================================
+// 1. MAP - MapLibre GL with 55 agents
+// =========================================================
+const agentData = {
+  type: 'FeatureCollection',
+  features: [
+    // ── KØBENHAVN CITY (20 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5683,55.6761]}, properties:{name:'Anders Møller', chain:'danbolig', rating:4.9, city:'København K'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5620,55.6690]}, properties:{name:'Maria Christensen', chain:'EDC', rating:4.8, city:'Vesterbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5710,55.6913]}, properties:{name:'Peter Hansen', chain:'home', rating:4.7, city:'Nørrebro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5935,55.7060]}, properties:{name:'Lotte Petersen', chain:'nybolig', rating:5.0, city:'Østerbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5501,55.6795]}, properties:{name:'Thomas Berg', chain:'Realmæglerne', rating:4.8, city:'Frederiksberg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4980,55.6680]}, properties:{name:'Søren Larsen', chain:'BoligOne', rating:4.6, city:'Valby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6100,55.6500]}, properties:{name:'Pia Johansen', chain:'estate', rating:4.9, city:'Amager'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4700,55.6780]}, properties:{name:'Claus Nielsen', chain:'danbolig', rating:4.7, city:'Vanløse'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5450,55.6830]}, properties:{name:'Hanne Thomsen', chain:'EDC', rating:4.8, city:'Indre By'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5150,55.7050]}, properties:{name:'Rasmus Brandt', chain:'home', rating:4.6, city:'Bispebjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5050,55.7150]}, properties:{name:'Katrine Holm', chain:'nybolig', rating:4.9, city:'Brønshøj'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5880,55.6780]}, properties:{name:'Michael Dahl', chain:'Realmæglerne', rating:4.7, city:'Christianshavn'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6300,55.6350]}, properties:{name:'Birgit Strand', chain:'BoligOne', rating:4.8, city:'Kastrup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4750,55.6530]}, properties:{name:'Jesper Fog', chain:'estate', rating:4.9, city:'Hvidovre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5230,55.6700]}, properties:{name:'Louise Ravn', chain:'danbolig', rating:4.8, city:'Frederiksberg C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6020,55.6600]}, properties:{name:'Niels Bork', chain:'EDC', rating:4.7, city:'Sundby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4530,55.6860]}, properties:{name:'Annette Dalgaard', chain:'home', rating:4.6, city:'Rødovre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4340,55.6560]}, properties:{name:'Frank Skov', chain:'nybolig', rating:4.9, city:'Brøndby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5760,55.7120]}, properties:{name:'Camilla Rex', chain:'Realmæglerne', rating:4.8, city:'Gentofte'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5380,55.7300]}, properties:{name:'Ole Friis', chain:'BoligOne', rating:4.7, city:'Hellerup'} },
+    // ── NORDSJÆLLAND (12 mæglere) ────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5040,55.7710]}, properties:{name:'Lars Eriksen', chain:'home', rating:4.6, city:'Lyngby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5600,55.8000]}, properties:{name:'Gitte Pedersen', chain:'estate', rating:4.8, city:'Birkerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3700,55.8120]}, properties:{name:'Karen Knudsen', chain:'danbolig', rating:5.0, city:'Farum'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3520,55.8700]}, properties:{name:'Henrik Lund', chain:'EDC', rating:4.8, city:'Allerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3070,55.9290]}, properties:{name:'Bente Madsen', chain:'nybolig', rating:4.9, city:'Hillerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4980,55.8750]}, properties:{name:'Signe Rask', chain:'Realmæglerne', rating:4.7, city:'Hørsholm'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5380,55.8870]}, properties:{name:'Martin Vang', chain:'BoligOne', rating:4.8, city:'Rungsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6130,55.9560]}, properties:{name:'Erik Rasmussen', chain:'estate', rating:4.7, city:'Helsingør'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5400,55.9600]}, properties:{name:'Dorthe Kjær', chain:'danbolig', rating:4.9, city:'Humlebæk'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4010,55.9770]}, properties:{name:'Poul Hald', chain:'EDC', rating:4.6, city:'Fredensborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9940,55.8380]}, properties:{name:'Mette Falk', chain:'home', rating:4.8, city:'Frederikssund'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3500,55.7700]}, properties:{name:'Jens Olsen', chain:'nybolig', rating:4.6, city:'Ballerup'} },
+    // ── SJÆLLAND MIDT & VEST (10 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7180,55.7170]}, properties:{name:'Sten Krog', chain:'Realmæglerne', rating:4.8, city:'Holbæk'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.0860,55.6810]}, properties:{name:'Tina Munk', chain:'BoligOne', rating:4.7, city:'Kalundborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.3540,55.4020]}, properties:{name:'Bent Krogh', chain:'estate', rating:4.8, city:'Slagelse'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5590,55.4430]}, properties:{name:'Anja Mejlvig', chain:'danbolig', rating:4.9, city:'Sorø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7900,55.4450]}, properties:{name:'Mads Lund', chain:'EDC', rating:4.8, city:'Ringsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9800,55.6220]}, properties:{name:'Dorthe Lejre', chain:'home', rating:4.7, city:'Lejre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9200,55.4890]}, properties:{name:'Søren Falk', chain:'nybolig', rating:4.6, city:'Haslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8730,54.7680]}, properties:{name:'Gert Nykøbing', chain:'Realmæglerne', rating:4.8, city:'Nykøbing F'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.6800,55.0350]}, properties:{name:'Lone Præstø', chain:'BoligOne', rating:4.7, city:'Præstø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5500,55.6950]}, properties:{name:'Carsten Odsherred', chain:'estate', rating:4.9, city:'Nykøbing Sj'} },
+    // ── ROSKILDE & KØGE (8 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0800,55.6415]}, properties:{name:'Ole Jensen', chain:'danbolig', rating:4.8, city:'Roskilde'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0200,55.6100]}, properties:{name:'Vibeke Roskilde', chain:'EDC', rating:4.7, city:'Roskilde V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.1820,55.4570]}, properties:{name:'Anne Sørensen', chain:'home', rating:4.7, city:'Køge'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.2170,55.5330]}, properties:{name:'Klaus Solrød', chain:'nybolig', rating:4.8, city:'Solrød Strand'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.1350,55.5900]}, properties:{name:'Helle Greve', chain:'Realmæglerne', rating:4.6, city:'Greve'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.2500,55.4100]}, properties:{name:'Rene Stevns', chain:'BoligOne', rating:4.9, city:'Stevns'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0000,55.7100]}, properties:{name:'Anni Ring', chain:'estate', rating:4.7, city:'Ringsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8600,55.6800]}, properties:{name:'Torben Lejre', chain:'danbolig', rating:4.8, city:'Lejre'} },
+    // ── NÆSTVED & SYDSJÆLLAND (6 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7660,55.2300]}, properties:{name:'Niels Christoffersen', chain:'EDC', rating:4.9, city:'Næstved'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8200,55.1800]}, properties:{name:'Anita Fensmark', chain:'home', rating:4.7, city:'Fensmark'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9100,55.0100]}, properties:{name:'Vibeke Andersen', chain:'nybolig', rating:4.6, city:'Vordingborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0700,55.0750]}, properties:{name:'Lars Møn', chain:'Realmæglerne', rating:4.8, city:'Stege'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.6500,55.3500]}, properties:{name:'Birgit Faxe', chain:'BoligOne', rating:4.7, city:'Faxe'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5200,55.2400]}, properties:{name:'Kurt Dybvig', chain:'estate', rating:4.9, city:'Dybvad'} },
+    // ── ODENSE & FYN (14 mæglere) ────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3836,55.4038]}, properties:{name:'Henrik Mortensen', chain:'danbolig', rating:4.8, city:'Odense C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3500,55.4200]}, properties:{name:'Dorte Nielsen', chain:'EDC', rating:4.9, city:'Odense NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4250,55.3850]}, properties:{name:'Martin Hansen', chain:'home', rating:4.7, city:'Odense SØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3900,55.4300]}, properties:{name:'Pia Lund', chain:'nybolig', rating:4.8, city:'Odense N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3200,55.3850]}, properties:{name:'Flemming Vest', chain:'Realmæglerne', rating:4.6, city:'Odense SV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4500,55.4200]}, properties:{name:'Susanne Øst', chain:'BoligOne', rating:4.9, city:'Odense NØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3800,55.3750]}, properties:{name:'Allan Syd', chain:'estate', rating:4.7, city:'Odense S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.6027,55.0617]}, properties:{name:'Rikke Pedersen', chain:'danbolig', rating:4.9, city:'Svendborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.7890,55.3130]}, properties:{name:'Allan Larsen', chain:'EDC', rating:4.7, city:'Nyborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7290,55.5020]}, properties:{name:'Kirsten Middelfart', chain:'home', rating:4.8, city:'Middelfart'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8960,55.2740]}, properties:{name:'Bo Assens', chain:'nybolig', rating:4.6, city:'Assens'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2430,55.0970]}, properties:{name:'Lise Fåborg', chain:'Realmæglerne', rating:4.8, city:'Fåborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4830,55.2340]}, properties:{name:'Rene Ringe', chain:'BoligOne', rating:4.7, city:'Ringe'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.6600,55.4500]}, properties:{name:'Jette Kerteminde', chain:'estate', rating:4.9, city:'Kerteminde'} },
+    // ── AARHUS & OMEGN (15 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2134,56.1629]}, properties:{name:'Camilla Poulsen', chain:'danbolig', rating:5.0, city:'Aarhus C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1700,56.1600]}, properties:{name:'Finn Madsen', chain:'EDC', rating:4.8, city:'Aarhus V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2000,56.1900]}, properties:{name:'Stine Aarhus N', chain:'home', rating:4.7, city:'Aarhus N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1400,56.1800]}, properties:{name:'Morten Vestby', chain:'nybolig', rating:4.9, city:'Aarhus NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2300,56.1950]}, properties:{name:'Morten Lund', chain:'Realmæglerne', rating:4.9, city:'Risskov'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1900,56.1200]}, properties:{name:'Louise Eriksen', chain:'BoligOne', rating:4.7, city:'Viby J'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1350,56.1500]}, properties:{name:'Birgitte Holm', chain:'estate', rating:4.6, city:'Brabrand'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2350,56.1100]}, properties:{name:'Simon Højbjerg', chain:'danbolig', rating:4.8, city:'Højbjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1800,56.2050]}, properties:{name:'Sara Skejby', chain:'EDC', rating:4.7, city:'Skejby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2900,56.1900]}, properties:{name:'Niels Egå', chain:'home', rating:4.8, city:'Egå'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2300,56.2200]}, properties:{name:'Ann Lystrup', chain:'nybolig', rating:4.9, city:'Lystrup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0650,56.2650]}, properties:{name:'Peter Hinnerup', chain:'Realmæglerne', rating:4.6, city:'Hinnerup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9000,56.1550]}, properties:{name:'Lars Galten', chain:'BoligOne', rating:4.7, city:'Galten'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1590,55.9760]}, properties:{name:'Lone Odder', chain:'estate', rating:4.8, city:'Odder'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0400,56.3000]}, properties:{name:'Bent Hadsten', chain:'danbolig', rating:4.9, city:'Hadsten'} },
+    // ── SILKEBORG & OMEGN (7 mæglere) ────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5467,56.1699]}, properties:{name:'Bent Andersen', chain:'EDC', rating:4.9, city:'Silkeborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5700,56.1400]}, properties:{name:'Inge Silkeborg S', chain:'home', rating:4.7, city:'Silkeborg S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5200,56.2000]}, properties:{name:'Jens Silkeborg N', chain:'nybolig', rating:4.8, city:'Silkeborg N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9270,56.0429]}, properties:{name:'Merete Poulsen', chain:'Realmæglerne', rating:4.7, city:'Skanderborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7640,56.0820]}, properties:{name:'Hanne Ry', chain:'BoligOne', rating:4.8, city:'Ry'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.6440,56.3780]}, properties:{name:'Steen Bjerringbro', chain:'estate', rating:4.6, city:'Bjerringbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8500,56.2200]}, properties:{name:'Lene Gjern', chain:'danbolig', rating:4.9, city:'Gjern'} },
+    // ── VEJLE & TREKANTSOMRÅDET (12 mæglere) ─────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5350,55.7090]}, properties:{name:'Ulla Pedersen', chain:'EDC', rating:4.8, city:'Vejle'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5100,55.7400]}, properties:{name:'Christian Hansen', chain:'home', rating:4.6, city:'Vejle N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4800,55.7350]}, properties:{name:'Mette Vejle NV', chain:'nybolig', rating:4.9, city:'Vejle NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5550,55.6800]}, properties:{name:'Jonas Vejle S', chain:'Realmæglerne', rating:4.7, city:'Vejle S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4722,55.4904]}, properties:{name:'Jørgen Madsen', chain:'BoligOne', rating:4.9, city:'Kolding'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4900,55.4600]}, properties:{name:'Lise Kolding S', chain:'estate', rating:4.8, city:'Kolding S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7536,55.5643]}, properties:{name:'Inge Nielsen', chain:'danbolig', rating:4.8, city:'Fredericia'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7290,55.5020]}, properties:{name:'Bo Middelfart', chain:'EDC', rating:4.7, city:'Middelfart'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8602,55.8608]}, properties:{name:'Anita Sørensen', chain:'home', rating:4.7, city:'Horsens'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8800,55.8300]}, properties:{name:'Klaus Horsens S', chain:'nybolig', rating:4.8, city:'Horsens S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.2430,55.8540]}, properties:{name:'Tine Give', chain:'Realmæglerne', rating:4.6, city:'Give'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.1124,55.7280]}, properties:{name:'René Billund', chain:'BoligOne', rating:4.8, city:'Billund'} },
+    // ── AALBORG & NORDJYLLAND (10 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9187,57.0488]}, properties:{name:'Preben Larsen', chain:'estate', rating:4.8, city:'Aalborg C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8800,57.0700]}, properties:{name:'Susanne Berg', chain:'danbolig', rating:4.9, city:'Aalborg V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9500,57.0300]}, properties:{name:'Rene Christensen', chain:'EDC', rating:4.7, city:'Aalborg SØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8500,57.0300]}, properties:{name:'Kirsten Aalborg SV', chain:'home', rating:4.8, city:'Aalborg SV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9200,57.0650]}, properties:{name:'Lars Nørresundby', chain:'nybolig', rating:4.6, city:'Nørresundby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.5375,57.4401]}, properties:{name:'Bjarne Jensen', chain:'Realmæglerne', rating:4.9, city:'Frederikshavn'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9852,57.4640]}, properties:{name:'Lene Hansen', chain:'BoligOne', rating:4.7, city:'Hjørring'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9670,57.2710]}, properties:{name:'Finn Brønderslev', chain:'estate', rating:4.8, city:'Brønderslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.6576,57.5985]}, properties:{name:'Ruth Pedersen', chain:'danbolig', rating:4.8, city:'Skagen'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7896,56.6343]}, properties:{name:'Pia Eriksen', chain:'EDC', rating:4.6, city:'Hobro'} },
+    // ── RANDERS & MIDT-JYLLAND (6 mæglere) ──────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0506,56.4607]}, properties:{name:'Svend Mortensen', chain:'home', rating:4.8, city:'Randers'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0100,56.4900]}, properties:{name:'Bodil Randers NW', chain:'nybolig', rating:4.7, city:'Randers NW'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4028,56.4531]}, properties:{name:'Trine Christoffersen', chain:'Realmæglerne', rating:4.6, city:'Viborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.0220,56.5640]}, properties:{name:'Henrik Skive', chain:'BoligOne', rating:4.8, city:'Skive'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.9740,56.1396]}, properties:{name:'Kurt Larsen', chain:'estate', rating:4.8, city:'Herning'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.1580,56.1385]}, properties:{name:'Poul Ikast', chain:'danbolig', rating:4.6, city:'Ikast'} },
+    // ── ESBJERG & SYDVESTJYLLAND (6 mæglere) ─────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4603,55.4765]}, properties:{name:'Marianne Jensen', chain:'EDC', rating:4.9, city:'Esbjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4800,55.5050]}, properties:{name:'Torben Olsen', chain:'home', rating:4.7, city:'Esbjerg N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4200,55.4700]}, properties:{name:'Anne Esbjerg V', chain:'nybolig', rating:4.8, city:'Esbjerg V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.5200,55.4800]}, properties:{name:'Bo Esbjerg Ø', chain:'Realmæglerne', rating:4.6, city:'Esbjerg Ø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.7261,56.4616]}, properties:{name:'Gitte Sørensen', chain:'BoligOne', rating:4.9, city:'Holstebro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3080,56.5420]}, properties:{name:'Finn Lemvig', chain:'estate', rating:4.7, city:'Lemvig'} },
+    // ── SØNDERJYLLAND (5 mæglere) ─────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5613,55.2163]}, properties:{name:'Helle Christensen', chain:'danbolig', rating:4.8, city:'Sønderborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4730,55.0680]}, properties:{name:'Karl Haderslev', chain:'EDC', rating:4.7, city:'Haderslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.0910,55.5030]}, properties:{name:'Lene Tønder', chain:'home', rating:4.9, city:'Tønder'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3264,55.0929]}, properties:{name:'Leif Jensen', chain:'nybolig', rating:4.9, city:'Aabenraa'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7490,55.3500]}, properties:{name:'Mia Hejls', chain:'Realmæglerne', rating:4.6, city:'Christiansfeld'} },
+    // ── NORDVESTJYLLAND (4 mæglere) ──────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.2828,56.9030]}, properties:{name:'Hans Chr. Eriksen', chain:'BoligOne', rating:4.7, city:'Thisted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.6930,56.9580]}, properties:{name:'Anni Thisted', chain:'estate', rating:4.8, city:'Thisted S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3080,57.0710]}, properties:{name:'Ove Hanstholm', chain:'danbolig', rating:4.6, city:'Hanstholm'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.6180,56.3590]}, properties:{name:'Kirsten Holstebro', chain:'EDC', rating:4.9, city:'Holstebro S'} },
+    // ── BORNHOLM (2 mæglere) ─────────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[14.9147,55.1018]}, properties:{name:'Carsten Nielsen', chain:'home', rating:4.8, city:'Rønne'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[15.1270,55.0630]}, properties:{name:'Birthe Nexø', chain:'nybolig', rating:4.7, city:'Nexø'} },
+  ]
+};
+
+function initMap() {
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [10.55, 55.95],
+    zoom: 6.1,
+    attributionControl: false
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+  // Named Danish regions with broker counts and flyTo coords
+  const regionData = {
+    type: 'FeatureCollection',
+    features: [
+      { type:'Feature', geometry:{type:'Point',coordinates:[12.5200,55.7000]}, properties:{name:'Storkøbenhavn', count:32} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[12.3500,55.8800]}, properties:{name:'Nordsjælland', count:12} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.8000,55.5000]}, properties:{name:'Roskilde & Køge', count:8} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.4000,55.4000]}, properties:{name:'Vestsjælland', count:10} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.8000,55.2000]}, properties:{name:'Sydsjælland', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.3836,55.4038]}, properties:{name:'Odense & Fyn', count:14} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.2134,56.1629]}, properties:{name:'Aarhus', count:15} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.5467,56.1699]}, properties:{name:'Silkeborg', count:7} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.9187,57.0488]}, properties:{name:'Aalborg', count:10} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.5200,55.6500]}, properties:{name:'Vejle-Trekantsomr.', count:12} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[8.4603,55.4765]}, properties:{name:'Esbjerg', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.1000,56.3000]}, properties:{name:'Herning & Viborg', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.0506,56.4607]}, properties:{name:'Randers', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.2700,57.4000]}, properties:{name:'Nordjylland', count:4} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.3000,55.1500]}, properties:{name:'Sønderjylland', count:5} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[14.9147,55.1018]}, properties:{name:'Bornholm', count:2} },
+    ]
+  };
+
+  map.on('load', () => {
+
+    // ── REGION OVERVIEW (visible up to zoom 8) ──────────────────────
+    map.addSource('regions', { type: 'geojson', data: regionData });
+
+    map.addLayer({
+      id: 'region-circles',
+      type: 'circle',
+      source: 'regions',
+      maxzoom: 8,
+      paint: {
+        'circle-color': 'rgba(0,113,227,0.10)',
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 26, 7.5, 44],
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': 'rgba(0,113,227,0.30)'
+      }
+    });
+
+    map.addLayer({
+      id: 'region-labels',
+      type: 'symbol',
+      source: 'regions',
+      maxzoom: 8,
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 7.5, 13],
+        'text-anchor': 'center',
+        'text-offset': [0, -0.85]
+      },
+      paint: {
+        'text-color': '#0071E3',
+        'text-halo-color': 'rgba(255,255,255,0.92)',
+        'text-halo-width': 2
+      }
+    });
+
+    map.addLayer({
+      id: 'region-count',
+      type: 'symbol',
+      source: 'regions',
+      maxzoom: 8,
+      layout: {
+        'text-field': ['concat', ['to-string', ['get', 'count']], ' mæglere'],
+        'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, 9, 7.5, 11],
+        'text-anchor': 'center',
+        'text-offset': [0, 0.85]
+      },
+      paint: {
+        'text-color': '#6E6E73',
+        'text-halo-color': 'rgba(255,255,255,0.92)',
+        'text-halo-width': 2
+      }
+    });
+
+    // ── CLUSTERED BROKER DOTS (appear from zoom 7.5) ─────────────────
+    map.addSource('agents', {
+      type: 'geojson',
+      data: agentData,
+      cluster: true,
+      clusterMaxZoom: 11,
+      clusterRadius: 50
+    });
+
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'agents',
+      minzoom: 7.5,
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step', ['get', 'point_count'],
+          '#0071E3', 5,
+          '#34C759', 15,
+          '#D4A017'
+        ],
+        'circle-radius': ['step', ['get', 'point_count'], 22, 5, 28, 15, 34],
+        'circle-opacity': 0.92,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': 'rgba(255,255,255,0.85)'
+      }
+    });
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'agents',
+      minzoom: 7.5,
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': 13
+      },
+      paint: { 'text-color': '#ffffff' }
+    });
+
+    map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'agents',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#0071E3',
+        'circle-radius': 10,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': 'rgba(255,255,255,0.9)',
+        'circle-opacity': 0.95
+      }
+    });
+
+    // Broker name labels at high zoom
+    map.addLayer({
+      id: 'unclustered-label',
+      type: 'symbol',
+      source: 'agents',
+      minzoom: 12,
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+        'text-size': 11,
+        'text-anchor': 'top',
+        'text-offset': [0, 1.2]
+      },
+      paint: {
+        'text-color': '#1C1C1E',
+        'text-halo-color': 'rgba(255,255,255,0.9)',
+        'text-halo-width': 1.5
+      }
+    });
+
+    // ── INTERACTIONS ─────────────────────────────────────────────────
+
+    // Click region → fly in to area
+    ['region-circles', 'region-labels', 'region-count'].forEach(layer => {
+      map.on('click', layer, (e) => {
+        const coords = e.features[0].geometry.coordinates;
+        map.flyTo({ center: coords, zoom: 9.5, duration: 1200, essential: true });
+      });
+    });
+
+    // Click cluster → expand
+    map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      const clusterId = features[0].properties.cluster_id;
+      map.getSource('agents').getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) return;
+        map.easeTo({ center: features[0].geometry.coordinates, zoom: zoom + 0.5 });
+      });
+    });
+
+    // Click broker → premium popup
+    map.on('click', 'unclustered-point', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const { name, chain, rating, city } = e.features[0].properties;
+      const chainColors = {
+        'danbolig':'#E8343A','EDC':'#003D7C','home':'#1A1A1A',
+        'nybolig':'#C9A84C','Realmæglerne':'#00843D','estate':'#9B1FA6','BoligOne':'#0071E3'
+      };
+      const bg = chainColors[chain] || '#0071E3';
+      const starsSvg = [...Array(5)].map((_,i) =>
+        `<svg width="13" height="13" viewBox="0 0 24 24" fill="${i<Math.round(rating)?'#D4A017':'#E5E5EA'}" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+      ).join('');
+      new maplibregl.Popup({ closeButton: true, maxWidth: '260px' })
+        .setLngLat(coordinates)
+        .setHTML(`<div style="font-family:'Inter',sans-serif;padding:2px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="background:${bg};color:#fff;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;letter-spacing:0.4px">${chain}</span>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#1C1C1E;margin-bottom:4px">${name}</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:12px;color:#6E6E73;margin-bottom:10px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${city}
+          </div>
+          <div style="display:flex;align-items:center;gap:2px;margin-bottom:14px">
+            ${starsSvg}
+            <span style="font-size:12px;color:#6E6E73;margin-left:6px;font-weight:600">${rating}</span>
+          </div>
+          <button onclick="openModal()" style="display:block;width:100%;background:#0071E3;color:#fff;border:none;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.2px" onmouseover="this.style.background='#005BB5'" onmouseout="this.style.background='#0071E3'">Få tilbud fra ${name.split(' ')[0]}</button>
+        </div>`)
+        .addTo(map);
+    });
+
+    // Cursors
+    ['region-circles','region-labels','region-count','clusters','unclustered-point'].forEach(layer => {
+      map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
+    });
+  });
+}
+
+// Init map when DOM ready and element exists
+if (document.getElementById('map')) {
+  initMap();
+} else {
+  document.addEventListener('DOMContentLoaded', initMap);
+}
+
+// =========================================================
+// 2. SOCIAL PROOF TOAST
+// =========================================================
+const spData = [
+  { name:'Mikkel B.', city:'Aarhus', text:'Fik 3 tilbud på 18 timer' },
+  { name:'Trine K.', city:'København', text:'Solgte 12% over udbudspris' },
+  { name:'Hans J.', city:'Odense', text:'Sparede 38.000 kr i salær' },
+  { name:'Louise M.', city:'Aalborg', text:'Solgte villaen på 11 dage' },
+  { name:'Peter S.', city:'Vejle', text:'Fantastisk service – 5 stjerner' },
+  { name:'Anne T.', city:'Roskilde', text:'Solgte på 3 uger' },
+];
+let spIndex = 0;
+const toast = document.getElementById('sp-toast');
+const spName = document.getElementById('sp-name');
+const spText = document.getElementById('sp-text');
+
+function showToast(data) {
+  spName.textContent = data.name;
+  spText.textContent = data.text;
+  toast.classList.add('visible');
+  setTimeout(() => { toast.classList.remove('visible'); }, 4500);
+}
+
+setTimeout(() => {
+  showToast(spData[spIndex]);
+  spIndex = (spIndex + 1) % spData.length;
+  setInterval(() => {
+    showToast(spData[spIndex]);
+    spIndex = (spIndex + 1) % spData.length;
+  }, 7000);
+}, 3000);
+
+// =========================================================
+// 3. FLOATING BUTTON
+// =========================================================
+setTimeout(() => {
+  const fb = document.getElementById('float-btn');
+  if (fb) fb.classList.add('visible');
+}, 2000);
+
+// =========================================================
+// 4. EXIT INTENT
+// =========================================================
+let exitTriggered = false;
+function showExit() {
+  if (exitTriggered) return;
+  exitTriggered = true;
+  localStorage.setItem('exitShown', '1');
+  document.getElementById('exit-overlay').classList.add('open');
+}
+function closeExit() {
+  document.getElementById('exit-overlay').classList.remove('open');
+}
+
+if (!localStorage.getItem('exitShown')) {
+  document.addEventListener('mouseleave', (e) => {
+    if (e.clientY < 0) showExit();
+  });
+  setTimeout(() => { showExit(); }, 60000);
+}
+
+document.getElementById('exit-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('exit-overlay')) closeExit();
+});
+
+// =========================================================
+// 5. MULTI-STEP MODAL
+// =========================================================
+let currentStep = 0;
+
+function openModal() {
+  currentStep = 0;
+  updateStep();
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function nextStep() {
+  if (currentStep < 2) {
+    currentStep++;
+    updateStep();
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    updateStep();
+  }
+}
+
+function updateStep() {
+  document.querySelectorAll('.step-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === currentStep);
+  });
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentStep);
+  });
+  const fill = document.getElementById('step-fill');
+  if (fill) fill.style.width = ((currentStep + 1) / 3 * 100) + '%';
+}
+
+function submitForm() {
+  const fname = document.getElementById('m-fname').value.trim();
+  const email = document.getElementById('m-email').value.trim();
+  const phone = document.getElementById('m-phone').value.trim();
+  let valid = true;
+  [document.getElementById('m-fname'), document.getElementById('m-lname'),
+   document.getElementById('m-email'), document.getElementById('m-phone')].forEach(inp => {
+    if (!inp.value.trim()) {
+      inp.style.borderColor = '#FF3B30';
+      valid = false;
+    } else {
+      inp.style.borderColor = '';
+    }
+  });
+  if (!valid) return;
+  nextStep();
+}
+
+document.getElementById('modal-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+// Escape key closes modals
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeExit();
+  }
+});
+
+// =========================================================
+// 6. PROPERTY TYPE SELECTOR
+// =========================================================
+document.querySelectorAll('.prop-type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.prop-type-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+
+// =========================================================
+// 7. SCROLL REVEAL
+// =========================================================
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObserver.observe(el));
+
+// =========================================================
+// 8. COUNTER ANIMATION
+// =========================================================
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+  const startVal = 0;
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(eased * target);
+    el.textContent = current.toLocaleString('da-DK') + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.target.dataset.count) {
+      animateCounter(entry.target);
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+// =========================================================
+// 9. SOLD CAROUSEL
+// =========================================================
+let soldIndex = 0;
+const soldTrack = document.getElementById('sold-track');
+const soldPrev = document.getElementById('sold-prev');
+const soldNext = document.getElementById('sold-next');
+let soldTouchStart = 0;
+let soldTouchEnd = 0;
+
+function getSoldCardWidth() {
+  const card = soldTrack.querySelector('.sold-card');
+  if (!card) return 360;
+  return card.offsetWidth + 20; // gap
+}
+
+function updateSoldNav() {
+  const cards = soldTrack.querySelectorAll('.sold-card');
+  soldPrev.disabled = soldIndex === 0;
+  soldNext.disabled = soldIndex >= cards.length - 1;
+}
+
+function scrollSold(dir) {
+  const cards = soldTrack.querySelectorAll('.sold-card');
+  soldIndex = Math.max(0, Math.min(soldIndex + dir, cards.length - 1));
+  const offset = soldIndex * getSoldCardWidth();
+  soldTrack.style.transform = `translateX(-${offset}px)`;
+  updateSoldNav();
+}
+
+soldPrev.addEventListener('click', () => scrollSold(-1));
+soldNext.addEventListener('click', () => scrollSold(1));
+
+soldTrack.addEventListener('touchstart', (e) => { soldTouchStart = e.touches[0].clientX; }, { passive: true });
+soldTrack.addEventListener('touchend', (e) => {
+  soldTouchEnd = e.changedTouches[0].clientX;
+  if (soldTouchStart - soldTouchEnd > 50) scrollSold(1);
+  if (soldTouchEnd - soldTouchStart > 50) scrollSold(-1);
+});
+
+// =========================================================
+// 10. FAQ ACCORDION
+// =========================================================
+document.querySelectorAll('.faq-item').forEach(item => {
+  const trigger = item.querySelector('.faq-trigger');
+  trigger.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+// =========================================================
+// 11. HEADER SCROLL
+// =========================================================
+window.addEventListener('scroll', () => {
+  document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// =========================================================
+// 12. LIVE COUNT ANIMATION
+// =========================================================
+setInterval(() => {
+  const el = document.getElementById('live-count');
+  if (el) el.textContent = (20 + Math.floor(Math.random() * 8)).toString();
+}, 8000);
+
+// =========================================================
+// 13. MOBILE MENU
+// =========================================================
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+let menuOpen = false;
+
+function closeMobileMenu() {
+  menuOpen = false;
+  mobileMenu.classList.remove('open');
+  mobileMenu.setAttribute('aria-hidden', 'true');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}
+
+menuBtn.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  mobileMenu.setAttribute('aria-hidden', menuOpen ? 'false' : 'true');
+  menuBtn.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
+});
+
+// =========================================================
+// 14. MAIN FORM SUBMIT
+// =========================================================
+function handleMainFormSubmit(btn) {
+  const form = btn.closest('.form-card');
+  const inputs = form.querySelectorAll('input, select');
+  let valid = true;
+  inputs.forEach(inp => {
+    if (!inp.value.trim()) {
+      inp.style.borderColor = '#FF3B30';
+      valid = false;
+    } else {
+      inp.style.borderColor = '';
+    }
+  });
+  if (!valid) {
+    // Shake animation on button
+    btn.style.transform = 'translateX(-4px)';
+    setTimeout(() => { btn.style.transform = 'translateX(4px)'; }, 80);
+    setTimeout(() => { btn.style.transform = ''; }, 160);
+    return;
+  }
+  btn.textContent = 'Tak! Vi kontakter dig inden for 24 timer';
+  btn.style.background = '#34C759';
+  btn.disabled = true;
+  btn.style.cursor = 'default';
+}
+</script>
+</body>
+</html>
