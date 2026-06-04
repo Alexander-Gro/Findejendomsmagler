@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8"/>
+<title>Archived mock-data sections — FindEjendomsmægler.nu</title>
+</head>
+<body>
+
+<!--
+  ARCHIVED MOCK-DATA SECTIONS
+
+  These four sections were removed from the live site because they used
+  fabricated content. Restore them when real data is available.
+
+  To restore a section:
+    1. Paste the markup back into index.html in the order shown below
+       (after the hero / brand marquee / before the protect section /
+        between screen and CTA — match the section boundary comments).
+    2. Paste the matching JS block back into the <script> at the bottom
+       of index.html.
+    3. For the MAP section: re-add the MapLibre CDN to <head>:
+         <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+         <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    4. Re-add the matching nav links to header + mobile-menu:
+         <a href="#map-sec">Mæglere i Danmark</a>
+         <a href="#testi-sec">Anmeldelser</a>
+
+  All CSS for these sections is still present in index.html (.brands-section,
+  .sold-*, .map-section, .testi-*) so styling continues to work on restore.
+-->
+
+<!-- ==================================================================
+     1) BRAND MARQUEE (logo-loop, fake mæglerkæder)
+     ================================================================== -->
+<!-- =========================================================
+     BRAND MARQUEE
+========================================================= -->
+<section class="brands-section" aria-label="Samarbejdspartnere">
+  <div class="brands-header">
+    <p class="brands-title">Brugt af Danmarks bedste mæglerkæder</p>
+  </div>
+  <div class="marquee-outer" aria-hidden="true">
+    <div class="marquee-track" id="brands-track">
+      <!-- First set -->
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">danbolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">EDC</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#2D3748" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">home</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#D4A017" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="#D4A017" stroke-width="1.5"/></svg>
+        <span class="brand-name">nybolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="brand-name">Realmæglerne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#34C759" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">BoligOne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#805AD5" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="brand-name">estate</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="white"/></svg>
+        <span class="brand-name">Nordbolig</span>
+      </div>
+      <!-- Duplicate set for seamless loop -->
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">danbolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">EDC</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#2D3748" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/></svg>
+        <span class="brand-name">home</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#D4A017" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="#D4A017" stroke-width="1.5"/></svg>
+        <span class="brand-name">nybolig</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0071E3" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="brand-name">Realmæglerne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#34C759" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="white" stroke-width="1.5"/></svg>
+        <span class="brand-name">BoligOne</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#805AD5" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="brand-name">estate</span>
+      </div>
+      <div class="brand-item">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E53E3E" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3" fill="white"/></svg>
+        <span class="brand-name">Nordbolig</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     2) SOLD CAROUSEL (fake Strandvej-style listings)
+     ================================================================== -->
+<!-- =========================================================
+     SOLD CAROUSEL
+========================================================= -->
+<section class="sold-section">
+  <div class="sold-header container">
+    <div>
+      <h2 class="section-h2 reveal">Boliger solgt med vores mæglere</h2>
+    </div>
+    <div class="sold-nav">
+      <button class="sold-nav-btn" id="sold-prev" disabled aria-label="Forrige">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="sold-nav-btn" id="sold-next" aria-label="Næste">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sold-outer">
+    <div class="sold-track" id="sold-track">
+      <!-- Card 1 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1570129477492-45c003dc0eeb?w=800&h=533&fit=crop&auto=format&q=80" alt="Strandvej 45, Hellerup" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Strandvej 45, 2900 Hellerup</div>
+          <div class="sold-meta">198 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 4.995.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=533&fit=crop&auto=format&q=80" alt="Elmevej 12, Aarhus" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Elmevej 12, 8000 Aarhus C</div>
+          <div class="sold-meta">145 m² · 4 vær. · Parcelhus</div>
+          <div class="sold-price">Solgt for 3.295.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=533&fit=crop&auto=format&q=80" alt="Højbjergvej 33, Lyngby" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Højbjergvej 33, 2800 Lyngby</div>
+          <div class="sold-meta">165 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 4.195.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=533&fit=crop&auto=format&q=80" alt="Birkevej 8, Birkerød" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Birkevej 8, 3460 Birkerød</div>
+          <div class="sold-meta">182 m² · 5 vær. · Villa</div>
+          <div class="sold-price">Solgt for 3.895.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=533&fit=crop&auto=format&q=80" alt="Vestergade 7, Odense" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Vestergade 7, 5000 Odense C</div>
+          <div class="sold-meta">112 m² · 4 vær. · Rækkehus</div>
+          <div class="sold-price">Solgt for 2.495.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&h=533&fit=crop&auto=format&q=80" alt="Søndergade 22, Aalborg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Søndergade 22, 9000 Aalborg</div>
+          <div class="sold-meta">130 m² · 4 vær. · Parcelhus</div>
+          <div class="sold-price">Solgt for 2.895.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 7 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=533&fit=crop&auto=format&q=80" alt="Gammel Kongevej 18, Frederiksberg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Gammel Kongevej 18, 1850 Frbg</div>
+          <div class="sold-meta">95 m² · 3 vær. · Lejlighed</div>
+          <div class="sold-price">Solgt for 3.195.000 kr.</div>
+        </div>
+      </div>
+      <!-- Card 8 -->
+      <div class="sold-card">
+        <div class="sold-img-wrap">
+          <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&h=533&fit=crop&auto=format&q=80" alt="Havnegade 5, Esbjerg" loading="lazy"/>
+          <span class="sold-badge">SOLGT</span>
+        </div>
+        <div class="sold-body">
+          <div class="sold-title">Havnegade 5, 6700 Esbjerg</div>
+          <div class="sold-meta">140 m² · 4 vær. · Villa</div>
+          <div class="sold-price">Solgt for 2.195.000 kr.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     3) MAP SECTION (MapLibre + fake agent GeoJSON in JS block below)
+     ================================================================== -->
+<!-- =========================================================
+     MAP SECTION
+========================================================= -->
+<section class="map-section" id="map-sec">
+  <div class="container">
+    <h2 class="section-h2 reveal">Godkendte mæglere i dit område</h2>
+    <p class="section-desc reveal reveal-d1">Klik på et område for at se de mæglere, vi samarbejder med der, zoom ind for at finde præcis den rigtige mægler til din bolig.</p>
+    <div id="map" style="height:520px;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);" class="reveal reveal-d3" role="img" aria-label="Kort over mæglere i Danmark opdelt efter område"></div>
+    <div class="map-legend reveal reveal-d4">
+      <div class="legend-item">
+        <div style="width:18px;height:18px;border-radius:50%;background:rgba(0,113,227,0.15);border:1.5px solid rgba(0,113,227,0.4);flex-shrink:0" aria-hidden="true"></div>
+        Område, klik for at zoome ind
+      </div>
+      <div class="legend-item">
+        <div class="legend-cluster" aria-hidden="true">5</div>
+        Mægler-klynge
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" aria-hidden="true"></div>
+        Enkelt mægler
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     4) TESTIMONIALS (fake quotes + people)
+     ================================================================== -->
+<!-- =========================================================
+     TESTIMONIALS
+========================================================= -->
+<section class="testi-section" id="testi-sec">
+  <div class="container" style="text-align:center">
+    <h2 class="section-h2" style="color:white;">Det siger 12.000+ sælgere</h2>
+    <div class="testi-rating" aria-label="Bedømmelse 4.9 ud af 5 baseret på 12.483 anmeldelser">
+      <div class="testi-stars" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <span style="color:white;font-size:28px;font-weight:800;letter-spacing:-0.5px">4.9</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:14px">/5 · Baseret på 12.483 anmeldelser</span>
+    </div>
+  </div>
+  <div aria-hidden="true">
+    <!-- Row 1: scrolls left -->
+    <div class="testi-marquee-outer">
+      <div class="testi-marquee-row">
+        <!-- Card 1 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">+11% over udbudspris</div>
+          <p class="testi-quote">"Vi solgte vores villa <span class="testi-highlight">15% over udbudsprisen på blot 11 dage</span>. Noget vi aldrig selv havde opnået, mægleren kendte alle interesserede køber i vores kvarter."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Mette Kristensen"/>
+            <div>
+              <div class="testi-name">Mette Kristensen</div>
+              <div class="testi-city">Aarhus C</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">41.000 kr. sparet</div>
+          <p class="testi-quote">"De fandt en klausul i min kontrakt der ville have bundet mig i <span class="testi-highlight">6 måneder ekstra</span>. Det rettede de inden jeg skrev under. Og fik forhandlet salæret ned med 41.000 kr."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Lars Jensen"/>
+            <div>
+              <div class="testi-name">Lars Jensen</div>
+              <div class="testi-city">København NV</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">Solgt på 3 uger</div>
+          <p class="testi-quote">"Fra første vurdering til underskrevet aftale tog det kun <span class="testi-highlight">3 uger</span>. Mægleren kendte markedet perfekt og vi endte 8% over den pris vi selv troede vi kunne få."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Sofie Andersen"/>
+            <div>
+              <div class="testi-name">Sofie Andersen</div>
+              <div class="testi-city">Odense C</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(212,160,23,0.3)" stroke="#D4A017" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="testi-number">Første gang, ingen stress</div>
+          <p class="testi-quote">"Første gang vi solgte bolig, vi anede ikke hvad vi skulle kigge efter i kontrakten. De gennemgik den og <span class="testi-highlight">fjernede 3 klausuler</span> der kunne have kostet os dyrt. Uvurderlig hjælp."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Thomas Nielsen"/>
+            <div>
+              <div class="testi-name">Thomas Nielsen</div>
+              <div class="testi-city">Vejle</div>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate set for seamless loop -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Vi solgte vores villa 15% over udbudsprisen på blot 11 dage. Utrolig service og den rette mægler fra start."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Mette Kristensen"/>
+            <div>
+              <div class="testi-name">Mette Kristensen</div>
+              <div class="testi-city">Aarhus C</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Sparede mindst 40.000 kr i salær. Perfekt match og ingen skjulte udgifter. Kan klart anbefales til alle."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Lars Jensen"/>
+            <div>
+              <div class="testi-name">Lars Jensen</div>
+              <div class="testi-city">København NV</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Fra første vurdering til underskrevet aftale tog det kun 3 uger. Mægleren kendte markedet perfekt."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Sofie Andersen"/>
+            <div>
+              <div class="testi-name">Sofie Andersen</div>
+              <div class="testi-city">Odense C</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(212,160,23,0.3)" stroke="#D4A017" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Første gang vi solgte bolig – vi følte os trygge hele vejen. De screenede mæglere var professionelle og ærlige."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Thomas Nielsen"/>
+            <div>
+              <div class="testi-name">Thomas Nielsen</div>
+              <div class="testi-city">Vejle</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Row 2: scrolls right -->
+    <div class="testi-marquee-outer" style="margin-top:20px">
+      <div class="testi-marquee-row testi-marquee-row-rev">
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Mægleren kendte vores kvarter som sin egen bukselomme. Solgt på 9 dage til fuld udbudspris!"</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Rasmus P."/>
+            <div>
+              <div class="testi-name">Rasmus P.</div>
+              <div class="testi-city">Roskilde</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Super nemt – jeg udfyldte formularen på 90 sekunder og havde 3 konkrete tilbud samme dag næste morgen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Anette L."/>
+            <div>
+              <div class="testi-name">Anette L.</div>
+              <div class="testi-city">Silkeborg</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Ville aldrig have fundet den her mægler selv. Han kendte alle de potentielle købere i området i forvejen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Kim M."/>
+            <div>
+              <div class="testi-name">Kim M.</div>
+              <div class="testi-city">Horsens</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Professionel screening betyder alt. Vi undgik en dårlig mægler og fandt en fantastisk en i stedet."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Lene K."/>
+            <div>
+              <div class="testi-name">Lene K.</div>
+              <div class="testi-city">Esbjerg</div>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate for loop -->
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Mægleren kendte vores kvarter som sin egen bukselomme. Solgt på 9 dage til fuld udbudspris!"</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&auto=format&q=80" alt="Rasmus P."/>
+            <div>
+              <div class="testi-name">Rasmus P.</div>
+              <div class="testi-city">Roskilde</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Super nemt – jeg udfyldte formularen på 90 sekunder og havde 3 konkrete tilbud samme dag næste morgen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&auto=format&q=80" alt="Anette L."/>
+            <div>
+              <div class="testi-name">Anette L.</div>
+              <div class="testi-city">Silkeborg</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Ville aldrig have fundet den her mægler selv. Han kendte alle de potentielle købere i området i forvejen."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&auto=format&q=80" alt="Kim M."/>
+            <div>
+              <div class="testi-name">Kim M.</div>
+              <div class="testi-city">Horsens</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div style="display:flex;gap:3px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4A017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-quote">"Professionel screening betyder alt. Vi undgik en dårlig mægler og fandt en fantastisk en i stedet."</p>
+          <div class="testi-author">
+            <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&auto=format&q=80" alt="Lene K."/>
+            <div>
+              <div class="testi-name">Lene K.</div>
+              <div class="testi-city">Esbjerg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     JS — MAP INIT (MapLibre, 55 fake agents, popups, zoom-fly)
+     ================================================================== -->
+<script>
+// 1. MAP - MapLibre GL with 55 agents
+// =========================================================
+const agentData = {
+  type: 'FeatureCollection',
+  features: [
+    // ── KØBENHAVN CITY (20 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5683,55.6761]}, properties:{name:'Anders Møller', chain:'danbolig', rating:4.9, city:'København K'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5620,55.6690]}, properties:{name:'Maria Christensen', chain:'EDC', rating:4.8, city:'Vesterbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5710,55.6913]}, properties:{name:'Peter Hansen', chain:'home', rating:4.7, city:'Nørrebro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5935,55.7060]}, properties:{name:'Lotte Petersen', chain:'nybolig', rating:5.0, city:'Østerbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5501,55.6795]}, properties:{name:'Thomas Berg', chain:'Realmæglerne', rating:4.8, city:'Frederiksberg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4980,55.6680]}, properties:{name:'Søren Larsen', chain:'BoligOne', rating:4.6, city:'Valby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6100,55.6500]}, properties:{name:'Pia Johansen', chain:'estate', rating:4.9, city:'Amager'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4700,55.6780]}, properties:{name:'Claus Nielsen', chain:'danbolig', rating:4.7, city:'Vanløse'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5450,55.6830]}, properties:{name:'Hanne Thomsen', chain:'EDC', rating:4.8, city:'Indre By'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5150,55.7050]}, properties:{name:'Rasmus Brandt', chain:'home', rating:4.6, city:'Bispebjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5050,55.7150]}, properties:{name:'Katrine Holm', chain:'nybolig', rating:4.9, city:'Brønshøj'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5880,55.6780]}, properties:{name:'Michael Dahl', chain:'Realmæglerne', rating:4.7, city:'Christianshavn'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6300,55.6350]}, properties:{name:'Birgit Strand', chain:'BoligOne', rating:4.8, city:'Kastrup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4750,55.6530]}, properties:{name:'Jesper Fog', chain:'estate', rating:4.9, city:'Hvidovre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5230,55.6700]}, properties:{name:'Louise Ravn', chain:'danbolig', rating:4.8, city:'Frederiksberg C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6020,55.6600]}, properties:{name:'Niels Bork', chain:'EDC', rating:4.7, city:'Sundby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4530,55.6860]}, properties:{name:'Annette Dalgaard', chain:'home', rating:4.6, city:'Rødovre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4340,55.6560]}, properties:{name:'Frank Skov', chain:'nybolig', rating:4.9, city:'Brøndby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5760,55.7120]}, properties:{name:'Camilla Rex', chain:'Realmæglerne', rating:4.8, city:'Gentofte'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5380,55.7300]}, properties:{name:'Ole Friis', chain:'BoligOne', rating:4.7, city:'Hellerup'} },
+    // ── NORDSJÆLLAND (12 mæglere) ────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5040,55.7710]}, properties:{name:'Lars Eriksen', chain:'home', rating:4.6, city:'Lyngby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5600,55.8000]}, properties:{name:'Gitte Pedersen', chain:'estate', rating:4.8, city:'Birkerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3700,55.8120]}, properties:{name:'Karen Knudsen', chain:'danbolig', rating:5.0, city:'Farum'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3520,55.8700]}, properties:{name:'Henrik Lund', chain:'EDC', rating:4.8, city:'Allerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3070,55.9290]}, properties:{name:'Bente Madsen', chain:'nybolig', rating:4.9, city:'Hillerød'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4980,55.8750]}, properties:{name:'Signe Rask', chain:'Realmæglerne', rating:4.7, city:'Hørsholm'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5380,55.8870]}, properties:{name:'Martin Vang', chain:'BoligOne', rating:4.8, city:'Rungsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.6130,55.9560]}, properties:{name:'Erik Rasmussen', chain:'estate', rating:4.7, city:'Helsingør'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.5400,55.9600]}, properties:{name:'Dorthe Kjær', chain:'danbolig', rating:4.9, city:'Humlebæk'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.4010,55.9770]}, properties:{name:'Poul Hald', chain:'EDC', rating:4.6, city:'Fredensborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9940,55.8380]}, properties:{name:'Mette Falk', chain:'home', rating:4.8, city:'Frederikssund'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.3500,55.7700]}, properties:{name:'Jens Olsen', chain:'nybolig', rating:4.6, city:'Ballerup'} },
+    // ── SJÆLLAND MIDT & VEST (10 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7180,55.7170]}, properties:{name:'Sten Krog', chain:'Realmæglerne', rating:4.8, city:'Holbæk'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.0860,55.6810]}, properties:{name:'Tina Munk', chain:'BoligOne', rating:4.7, city:'Kalundborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.3540,55.4020]}, properties:{name:'Bent Krogh', chain:'estate', rating:4.8, city:'Slagelse'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5590,55.4430]}, properties:{name:'Anja Mejlvig', chain:'danbolig', rating:4.9, city:'Sorø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7900,55.4450]}, properties:{name:'Mads Lund', chain:'EDC', rating:4.8, city:'Ringsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9800,55.6220]}, properties:{name:'Dorthe Lejre', chain:'home', rating:4.7, city:'Lejre'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9200,55.4890]}, properties:{name:'Søren Falk', chain:'nybolig', rating:4.6, city:'Haslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8730,54.7680]}, properties:{name:'Gert Nykøbing', chain:'Realmæglerne', rating:4.8, city:'Nykøbing F'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.6800,55.0350]}, properties:{name:'Lone Præstø', chain:'BoligOne', rating:4.7, city:'Præstø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5500,55.6950]}, properties:{name:'Carsten Odsherred', chain:'estate', rating:4.9, city:'Nykøbing Sj'} },
+    // ── ROSKILDE & KØGE (8 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0800,55.6415]}, properties:{name:'Ole Jensen', chain:'danbolig', rating:4.8, city:'Roskilde'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0200,55.6100]}, properties:{name:'Vibeke Roskilde', chain:'EDC', rating:4.7, city:'Roskilde V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.1820,55.4570]}, properties:{name:'Anne Sørensen', chain:'home', rating:4.7, city:'Køge'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.2170,55.5330]}, properties:{name:'Klaus Solrød', chain:'nybolig', rating:4.8, city:'Solrød Strand'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.1350,55.5900]}, properties:{name:'Helle Greve', chain:'Realmæglerne', rating:4.6, city:'Greve'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.2500,55.4100]}, properties:{name:'Rene Stevns', chain:'BoligOne', rating:4.9, city:'Stevns'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0000,55.7100]}, properties:{name:'Anni Ring', chain:'estate', rating:4.7, city:'Ringsted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8600,55.6800]}, properties:{name:'Torben Lejre', chain:'danbolig', rating:4.8, city:'Lejre'} },
+    // ── NÆSTVED & SYDSJÆLLAND (6 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.7660,55.2300]}, properties:{name:'Niels Christoffersen', chain:'EDC', rating:4.9, city:'Næstved'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.8200,55.1800]}, properties:{name:'Anita Fensmark', chain:'home', rating:4.7, city:'Fensmark'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.9100,55.0100]}, properties:{name:'Vibeke Andersen', chain:'nybolig', rating:4.6, city:'Vordingborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[12.0700,55.0750]}, properties:{name:'Lars Møn', chain:'Realmæglerne', rating:4.8, city:'Stege'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.6500,55.3500]}, properties:{name:'Birgit Faxe', chain:'BoligOne', rating:4.7, city:'Faxe'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[11.5200,55.2400]}, properties:{name:'Kurt Dybvig', chain:'estate', rating:4.9, city:'Dybvad'} },
+    // ── ODENSE & FYN (14 mæglere) ────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3836,55.4038]}, properties:{name:'Henrik Mortensen', chain:'danbolig', rating:4.8, city:'Odense C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3500,55.4200]}, properties:{name:'Dorte Nielsen', chain:'EDC', rating:4.9, city:'Odense NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4250,55.3850]}, properties:{name:'Martin Hansen', chain:'home', rating:4.7, city:'Odense SØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3900,55.4300]}, properties:{name:'Pia Lund', chain:'nybolig', rating:4.8, city:'Odense N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3200,55.3850]}, properties:{name:'Flemming Vest', chain:'Realmæglerne', rating:4.6, city:'Odense SV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4500,55.4200]}, properties:{name:'Susanne Øst', chain:'BoligOne', rating:4.9, city:'Odense NØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.3800,55.3750]}, properties:{name:'Allan Syd', chain:'estate', rating:4.7, city:'Odense S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.6027,55.0617]}, properties:{name:'Rikke Pedersen', chain:'danbolig', rating:4.9, city:'Svendborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.7890,55.3130]}, properties:{name:'Allan Larsen', chain:'EDC', rating:4.7, city:'Nyborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7290,55.5020]}, properties:{name:'Kirsten Middelfart', chain:'home', rating:4.8, city:'Middelfart'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8960,55.2740]}, properties:{name:'Bo Assens', chain:'nybolig', rating:4.6, city:'Assens'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2430,55.0970]}, properties:{name:'Lise Fåborg', chain:'Realmæglerne', rating:4.8, city:'Fåborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.4830,55.2340]}, properties:{name:'Rene Ringe', chain:'BoligOne', rating:4.7, city:'Ringe'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.6600,55.4500]}, properties:{name:'Jette Kerteminde', chain:'estate', rating:4.9, city:'Kerteminde'} },
+    // ── AARHUS & OMEGN (15 mæglere) ─────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2134,56.1629]}, properties:{name:'Camilla Poulsen', chain:'danbolig', rating:5.0, city:'Aarhus C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1700,56.1600]}, properties:{name:'Finn Madsen', chain:'EDC', rating:4.8, city:'Aarhus V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2000,56.1900]}, properties:{name:'Stine Aarhus N', chain:'home', rating:4.7, city:'Aarhus N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1400,56.1800]}, properties:{name:'Morten Vestby', chain:'nybolig', rating:4.9, city:'Aarhus NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2300,56.1950]}, properties:{name:'Morten Lund', chain:'Realmæglerne', rating:4.9, city:'Risskov'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1900,56.1200]}, properties:{name:'Louise Eriksen', chain:'BoligOne', rating:4.7, city:'Viby J'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1350,56.1500]}, properties:{name:'Birgitte Holm', chain:'estate', rating:4.6, city:'Brabrand'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2350,56.1100]}, properties:{name:'Simon Højbjerg', chain:'danbolig', rating:4.8, city:'Højbjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1800,56.2050]}, properties:{name:'Sara Skejby', chain:'EDC', rating:4.7, city:'Skejby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2900,56.1900]}, properties:{name:'Niels Egå', chain:'home', rating:4.8, city:'Egå'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.2300,56.2200]}, properties:{name:'Ann Lystrup', chain:'nybolig', rating:4.9, city:'Lystrup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0650,56.2650]}, properties:{name:'Peter Hinnerup', chain:'Realmæglerne', rating:4.6, city:'Hinnerup'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9000,56.1550]}, properties:{name:'Lars Galten', chain:'BoligOne', rating:4.7, city:'Galten'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.1590,55.9760]}, properties:{name:'Lone Odder', chain:'estate', rating:4.8, city:'Odder'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0400,56.3000]}, properties:{name:'Bent Hadsten', chain:'danbolig', rating:4.9, city:'Hadsten'} },
+    // ── SILKEBORG & OMEGN (7 mæglere) ────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5467,56.1699]}, properties:{name:'Bent Andersen', chain:'EDC', rating:4.9, city:'Silkeborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5700,56.1400]}, properties:{name:'Inge Silkeborg S', chain:'home', rating:4.7, city:'Silkeborg S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5200,56.2000]}, properties:{name:'Jens Silkeborg N', chain:'nybolig', rating:4.8, city:'Silkeborg N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9270,56.0429]}, properties:{name:'Merete Poulsen', chain:'Realmæglerne', rating:4.7, city:'Skanderborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7640,56.0820]}, properties:{name:'Hanne Ry', chain:'BoligOne', rating:4.8, city:'Ry'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.6440,56.3780]}, properties:{name:'Steen Bjerringbro', chain:'estate', rating:4.6, city:'Bjerringbro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8500,56.2200]}, properties:{name:'Lene Gjern', chain:'danbolig', rating:4.9, city:'Gjern'} },
+    // ── VEJLE & TREKANTSOMRÅDET (12 mæglere) ─────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5350,55.7090]}, properties:{name:'Ulla Pedersen', chain:'EDC', rating:4.8, city:'Vejle'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5100,55.7400]}, properties:{name:'Christian Hansen', chain:'home', rating:4.6, city:'Vejle N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4800,55.7350]}, properties:{name:'Mette Vejle NV', chain:'nybolig', rating:4.9, city:'Vejle NV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5550,55.6800]}, properties:{name:'Jonas Vejle S', chain:'Realmæglerne', rating:4.7, city:'Vejle S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4722,55.4904]}, properties:{name:'Jørgen Madsen', chain:'BoligOne', rating:4.9, city:'Kolding'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4900,55.4600]}, properties:{name:'Lise Kolding S', chain:'estate', rating:4.8, city:'Kolding S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7536,55.5643]}, properties:{name:'Inge Nielsen', chain:'danbolig', rating:4.8, city:'Fredericia'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7290,55.5020]}, properties:{name:'Bo Middelfart', chain:'EDC', rating:4.7, city:'Middelfart'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8602,55.8608]}, properties:{name:'Anita Sørensen', chain:'home', rating:4.7, city:'Horsens'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8800,55.8300]}, properties:{name:'Klaus Horsens S', chain:'nybolig', rating:4.8, city:'Horsens S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.2430,55.8540]}, properties:{name:'Tine Give', chain:'Realmæglerne', rating:4.6, city:'Give'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.1124,55.7280]}, properties:{name:'René Billund', chain:'BoligOne', rating:4.8, city:'Billund'} },
+    // ── AALBORG & NORDJYLLAND (10 mæglere) ───────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9187,57.0488]}, properties:{name:'Preben Larsen', chain:'estate', rating:4.8, city:'Aalborg C'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8800,57.0700]}, properties:{name:'Susanne Berg', chain:'danbolig', rating:4.9, city:'Aalborg V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9500,57.0300]}, properties:{name:'Rene Christensen', chain:'EDC', rating:4.7, city:'Aalborg SØ'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.8500,57.0300]}, properties:{name:'Kirsten Aalborg SV', chain:'home', rating:4.8, city:'Aalborg SV'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9200,57.0650]}, properties:{name:'Lars Nørresundby', chain:'nybolig', rating:4.6, city:'Nørresundby'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.5375,57.4401]}, properties:{name:'Bjarne Jensen', chain:'Realmæglerne', rating:4.9, city:'Frederikshavn'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9852,57.4640]}, properties:{name:'Lene Hansen', chain:'BoligOne', rating:4.7, city:'Hjørring'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.9670,57.2710]}, properties:{name:'Finn Brønderslev', chain:'estate', rating:4.8, city:'Brønderslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.6576,57.5985]}, properties:{name:'Ruth Pedersen', chain:'danbolig', rating:4.8, city:'Skagen'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7896,56.6343]}, properties:{name:'Pia Eriksen', chain:'EDC', rating:4.6, city:'Hobro'} },
+    // ── RANDERS & MIDT-JYLLAND (6 mæglere) ──────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0506,56.4607]}, properties:{name:'Svend Mortensen', chain:'home', rating:4.8, city:'Randers'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[10.0100,56.4900]}, properties:{name:'Bodil Randers NW', chain:'nybolig', rating:4.7, city:'Randers NW'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4028,56.4531]}, properties:{name:'Trine Christoffersen', chain:'Realmæglerne', rating:4.6, city:'Viborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.0220,56.5640]}, properties:{name:'Henrik Skive', chain:'BoligOne', rating:4.8, city:'Skive'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.9740,56.1396]}, properties:{name:'Kurt Larsen', chain:'estate', rating:4.8, city:'Herning'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.1580,56.1385]}, properties:{name:'Poul Ikast', chain:'danbolig', rating:4.6, city:'Ikast'} },
+    // ── ESBJERG & SYDVESTJYLLAND (6 mæglere) ─────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4603,55.4765]}, properties:{name:'Marianne Jensen', chain:'EDC', rating:4.9, city:'Esbjerg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4800,55.5050]}, properties:{name:'Torben Olsen', chain:'home', rating:4.7, city:'Esbjerg N'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.4200,55.4700]}, properties:{name:'Anne Esbjerg V', chain:'nybolig', rating:4.8, city:'Esbjerg V'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.5200,55.4800]}, properties:{name:'Bo Esbjerg Ø', chain:'Realmæglerne', rating:4.6, city:'Esbjerg Ø'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.7261,56.4616]}, properties:{name:'Gitte Sørensen', chain:'BoligOne', rating:4.9, city:'Holstebro'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3080,56.5420]}, properties:{name:'Finn Lemvig', chain:'estate', rating:4.7, city:'Lemvig'} },
+    // ── SØNDERJYLLAND (5 mæglere) ─────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.5613,55.2163]}, properties:{name:'Helle Christensen', chain:'danbolig', rating:4.8, city:'Sønderborg'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.4730,55.0680]}, properties:{name:'Karl Haderslev', chain:'EDC', rating:4.7, city:'Haderslev'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.0910,55.5030]}, properties:{name:'Lene Tønder', chain:'home', rating:4.9, city:'Tønder'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3264,55.0929]}, properties:{name:'Leif Jensen', chain:'nybolig', rating:4.9, city:'Aabenraa'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[9.7490,55.3500]}, properties:{name:'Mia Hejls', chain:'Realmæglerne', rating:4.6, city:'Christiansfeld'} },
+    // ── NORDVESTJYLLAND (4 mæglere) ──────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.2828,56.9030]}, properties:{name:'Hans Chr. Eriksen', chain:'BoligOne', rating:4.7, city:'Thisted'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.6930,56.9580]}, properties:{name:'Anni Thisted', chain:'estate', rating:4.8, city:'Thisted S'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.3080,57.0710]}, properties:{name:'Ove Hanstholm', chain:'danbolig', rating:4.6, city:'Hanstholm'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[8.6180,56.3590]}, properties:{name:'Kirsten Holstebro', chain:'EDC', rating:4.9, city:'Holstebro S'} },
+    // ── BORNHOLM (2 mæglere) ─────────────────────────────────
+    { type:'Feature', geometry:{type:'Point',coordinates:[14.9147,55.1018]}, properties:{name:'Carsten Nielsen', chain:'home', rating:4.8, city:'Rønne'} },
+    { type:'Feature', geometry:{type:'Point',coordinates:[15.1270,55.0630]}, properties:{name:'Birthe Nexø', chain:'nybolig', rating:4.7, city:'Nexø'} },
+  ]
+};
+
+function initMap() {
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [10.55, 55.95],
+    zoom: 6.1,
+    attributionControl: false
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+  // Named Danish regions with broker counts and flyTo coords
+  const regionData = {
+    type: 'FeatureCollection',
+    features: [
+      { type:'Feature', geometry:{type:'Point',coordinates:[12.5200,55.7000]}, properties:{name:'Storkøbenhavn', count:32} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[12.3500,55.8800]}, properties:{name:'Nordsjælland', count:12} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.8000,55.5000]}, properties:{name:'Roskilde & Køge', count:8} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.4000,55.4000]}, properties:{name:'Vestsjælland', count:10} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[11.8000,55.2000]}, properties:{name:'Sydsjælland', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.3836,55.4038]}, properties:{name:'Odense & Fyn', count:14} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.2134,56.1629]}, properties:{name:'Aarhus', count:15} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.5467,56.1699]}, properties:{name:'Silkeborg', count:7} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.9187,57.0488]}, properties:{name:'Aalborg', count:10} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.5200,55.6500]}, properties:{name:'Vejle-Trekantsomr.', count:12} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[8.4603,55.4765]}, properties:{name:'Esbjerg', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.1000,56.3000]}, properties:{name:'Herning & Viborg', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.0506,56.4607]}, properties:{name:'Randers', count:6} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[10.2700,57.4000]}, properties:{name:'Nordjylland', count:4} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[9.3000,55.1500]}, properties:{name:'Sønderjylland', count:5} },
+      { type:'Feature', geometry:{type:'Point',coordinates:[14.9147,55.1018]}, properties:{name:'Bornholm', count:2} },
+    ]
+  };
+
+  map.on('load', () => {
+
+    // ── REGION OVERVIEW (visible up to zoom 8) ──────────────────────
+    map.addSource('regions', { type: 'geojson', data: regionData });
+
+    map.addLayer({
+      id: 'region-circles',
+      type: 'circle',
+      source: 'regions',
+      maxzoom: 8,
+      paint: {
+        'circle-color': 'rgba(0,113,227,0.10)',
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 26, 7.5, 44],
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': 'rgba(0,113,227,0.30)'
+      }
+    });
+
+    map.addLayer({
+      id: 'region-labels',
+      type: 'symbol',
+      source: 'regions',
+      maxzoom: 8,
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 7.5, 13],
+        'text-anchor': 'center',
+        'text-offset': [0, -0.85]
+      },
+      paint: {
+        'text-color': '#0071E3',
+        'text-halo-color': 'rgba(255,255,255,0.92)',
+        'text-halo-width': 2
+      }
+    });
+
+    map.addLayer({
+      id: 'region-count',
+      type: 'symbol',
+      source: 'regions',
+      maxzoom: 8,
+      layout: {
+        'text-field': ['concat', ['to-string', ['get', 'count']], ' mæglere'],
+        'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, 9, 7.5, 11],
+        'text-anchor': 'center',
+        'text-offset': [0, 0.85]
+      },
+      paint: {
+        'text-color': '#6E6E73',
+        'text-halo-color': 'rgba(255,255,255,0.92)',
+        'text-halo-width': 2
+      }
+    });
+
+    // ── CLUSTERED BROKER DOTS (appear from zoom 7.5) ─────────────────
+    map.addSource('agents', {
+      type: 'geojson',
+      data: agentData,
+      cluster: true,
+      clusterMaxZoom: 11,
+      clusterRadius: 50
+    });
+
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'agents',
+      minzoom: 7.5,
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step', ['get', 'point_count'],
+          '#0071E3', 5,
+          '#34C759', 15,
+          '#D4A017'
+        ],
+        'circle-radius': ['step', ['get', 'point_count'], 22, 5, 28, 15, 34],
+        'circle-opacity': 0.92,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': 'rgba(255,255,255,0.85)'
+      }
+    });
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'agents',
+      minzoom: 7.5,
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': 13
+      },
+      paint: { 'text-color': '#ffffff' }
+    });
+
+    map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'agents',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#0071E3',
+        'circle-radius': 10,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': 'rgba(255,255,255,0.9)',
+        'circle-opacity': 0.95
+      }
+    });
+
+    // Broker name labels at high zoom
+    map.addLayer({
+      id: 'unclustered-label',
+      type: 'symbol',
+      source: 'agents',
+      minzoom: 12,
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+        'text-size': 11,
+        'text-anchor': 'top',
+        'text-offset': [0, 1.2]
+      },
+      paint: {
+        'text-color': '#1C1C1E',
+        'text-halo-color': 'rgba(255,255,255,0.9)',
+        'text-halo-width': 1.5
+      }
+    });
+
+    // ── INTERACTIONS ─────────────────────────────────────────────────
+
+    // Click region → fly in to area
+    ['region-circles', 'region-labels', 'region-count'].forEach(layer => {
+      map.on('click', layer, (e) => {
+        const coords = e.features[0].geometry.coordinates;
+        map.flyTo({ center: coords, zoom: 9.5, duration: 1200, essential: true });
+      });
+    });
+
+    // Click cluster → expand
+    map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      const clusterId = features[0].properties.cluster_id;
+      map.getSource('agents').getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) return;
+        map.easeTo({ center: features[0].geometry.coordinates, zoom: zoom + 0.5 });
+      });
+    });
+
+    // Click broker → premium popup
+    map.on('click', 'unclustered-point', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const { name, chain, rating, city } = e.features[0].properties;
+      const chainColors = {
+        'danbolig':'#E8343A','EDC':'#003D7C','home':'#1A1A1A',
+        'nybolig':'#C9A84C','Realmæglerne':'#00843D','estate':'#9B1FA6','BoligOne':'#0071E3'
+      };
+      const bg = chainColors[chain] || '#0071E3';
+      const starsSvg = [...Array(5)].map((_,i) =>
+        `<svg width="13" height="13" viewBox="0 0 24 24" fill="${i<Math.round(rating)?'#D4A017':'#E5E5EA'}" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+      ).join('');
+      new maplibregl.Popup({ closeButton: true, maxWidth: '260px' })
+        .setLngLat(coordinates)
+        .setHTML(`<div style="font-family:'Inter',sans-serif;padding:2px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="background:${bg};color:#fff;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;letter-spacing:0.4px">${chain}</span>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#1C1C1E;margin-bottom:4px">${name}</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:12px;color:#6E6E73;margin-bottom:10px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6E73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${city}
+          </div>
+          <div style="display:flex;align-items:center;gap:2px;margin-bottom:14px">
+            ${starsSvg}
+            <span style="font-size:12px;color:#6E6E73;margin-left:6px;font-weight:600">${rating}</span>
+          </div>
+          <button onclick="openModal()" style="display:block;width:100%;background:#0071E3;color:#fff;border:none;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.2px" onmouseover="this.style.background='#005BB5'" onmouseout="this.style.background='#0071E3'">Få tilbud fra ${name.split(' ')[0]}</button>
+        </div>`)
+        .addTo(map);
+    });
+
+    // Cursors
+    ['region-circles','region-labels','region-count','clusters','unclustered-point'].forEach(layer => {
+      map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
+    });
+  });
+}
+
+// Init map when DOM ready and element exists
+if (document.getElementById('map')) {
+  initMap();
+} else {
+  document.addEventListener('DOMContentLoaded', initMap);
+}
+
+</script>
+
+<!-- ==================================================================
+     JS — SOLD CAROUSEL (prev/next, touch swipe)
+     ================================================================== -->
+<script>
+// 9. SOLD CAROUSEL
+// =========================================================
+let soldIndex = 0;
+const soldTrack = document.getElementById('sold-track');
+const soldPrev = document.getElementById('sold-prev');
+const soldNext = document.getElementById('sold-next');
+let soldTouchStart = 0;
+let soldTouchEnd = 0;
+
+function getSoldCardWidth() {
+  const card = soldTrack.querySelector('.sold-card');
+  if (!card) return 360;
+  return card.offsetWidth + 20; // gap
+}
+
+function updateSoldNav() {
+  const cards = soldTrack.querySelectorAll('.sold-card');
+  soldPrev.disabled = soldIndex === 0;
+  soldNext.disabled = soldIndex >= cards.length - 1;
+}
+
+function scrollSold(dir) {
+  const cards = soldTrack.querySelectorAll('.sold-card');
+  soldIndex = Math.max(0, Math.min(soldIndex + dir, cards.length - 1));
+  const offset = soldIndex * getSoldCardWidth();
+  soldTrack.style.transform = `translateX(-${offset}px)`;
+  updateSoldNav();
+}
+
+soldPrev.addEventListener('click', () => scrollSold(-1));
+soldNext.addEventListener('click', () => scrollSold(1));
+
+soldTrack.addEventListener('touchstart', (e) => { soldTouchStart = e.touches[0].clientX; }, { passive: true });
+soldTrack.addEventListener('touchend', (e) => {
+  soldTouchEnd = e.changedTouches[0].clientX;
+  if (soldTouchStart - soldTouchEnd > 50) scrollSold(1);
+  if (soldTouchEnd - soldTouchStart > 50) scrollSold(-1);
+});
+</script>
+
+</body>
+</html>
