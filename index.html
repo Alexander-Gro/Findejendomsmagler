@@ -240,10 +240,8 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 max(24px, calc((100% - 1200px) / 2));
+      width: min(1200px, 100% - 48px);
+      margin-inline: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -252,14 +250,15 @@
 
     .hero-h1 {
       font-family: var(--font-display);
-      font-size: clamp(40px, 6.4vw, 84px);
+      font-size: clamp(36px, 4.4vw, 60px);
       font-weight: 700;
       letter-spacing: -0.025em;
-      line-height: 1.04;
+      line-height: 1.06;
       margin: 0 auto 22px;
       color: var(--text);
+      width: 100%;
+      max-width: 680px;
       text-wrap: balance;
-      max-width: 30ch;
     }
     .hero-h1 em {
       font-style: italic;
