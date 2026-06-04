@@ -69,9 +69,8 @@
        LAYOUT UTILITIES
     ========================================================= */
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 max(24px, calc(50vw - 580px));
+      width: min(1200px, 100% - 48px);
+      margin-inline: auto;
     }
 
     /* =========================================================
@@ -87,7 +86,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 max(24px, calc(50vw - 580px));
+      padding: 0 max(24px, calc((100% - 1200px) / 2));
       transition: border-color var(--transition);
     }
     header.scrolled { border-bottom-color: var(--border); }
@@ -172,7 +171,7 @@
       right: 0;
       background: var(--bg);
       border-bottom: 1px solid var(--border);
-      padding: 20px max(24px, calc(50vw - 580px));
+      padding: 20px max(24px, calc((100% - 1200px) / 2));
       z-index: 499;
       flex-direction: column;
       gap: 4px;
@@ -217,7 +216,7 @@
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 max(24px, calc(50vw - 580px));
+      padding: 0 max(24px, calc((100% - 1200px) / 2));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -563,7 +562,7 @@
     .sold-track {
       display: flex;
       gap: 20px;
-      padding: 0 max(24px, calc(50vw - 580px)) 12px;
+      padding: 0 max(24px, calc((100% - 1200px) / 2)) 12px;
       transition: transform 450ms cubic-bezier(0.25,0.46,0.45,0.94);
       will-change: transform;
     }
@@ -2402,7 +2401,7 @@
      FAQ
 ========================================================= -->
 <section class="faq-section">
-  <div class="container" style="max-width:720px">
+  <div class="container" style="width:min(880px, 100% - 48px)">
     <h2 class="section-h2 reveal" style="text-align:center">Ofte stillede spørgsmål</h2>
     <div class="faq-list reveal reveal-d2">
       <div class="faq-item">
