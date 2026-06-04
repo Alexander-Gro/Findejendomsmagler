@@ -1684,8 +1684,8 @@
     <h2 style="font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:12px;color:#1C1C1E;">Vent – du sætter penge på spil!</h2>
     <p style="font-size:15px;color:#6E6E73;line-height:1.65;margin-bottom:24px;">De fleste sælger til <strong style="color:#1C1C1E">under markedsprisen</strong> fordi de vælger den forkerte mægler. Lad os finde de 3 bedste til DIG – gratis.</p>
     <div style="margin:24px 0">
-      <input type="tel" class="form-input" placeholder="Dit telefonnummer" style="width:100%;margin-bottom:10px"/>
-      <button class="btn-blue" style="width:100%;padding:14px;font-size:15px" onclick="closeExit();openModal()">Ja, find min mægler →</button>
+      <input type="tel" id="exit-phone" class="form-input" placeholder="Dit telefonnummer" style="width:100%;margin-bottom:10px"/>
+      <button class="btn-blue" style="width:100%;padding:14px;font-size:15px" onclick="submitExitForm(this)">Ja, find min mægler →</button>
     </div>
     <button onclick="closeExit()" style="background:none;border:none;color:#6E6E73;font-size:13px;cursor:pointer;">Nej tak, jeg finder selv</button>
   </div>
@@ -1758,6 +1758,7 @@
         <label class="form-label" for="m-phone">Telefon</label>
         <input type="tel" class="form-input" id="m-phone" placeholder="12 34 56 78" style="width:100%" aria-label="Telefon"/>
       </div>
+      <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true"/>
       <div style="display:flex;gap:10px">
         <button class="btn-outline" onclick="prevStep()" type="button">← Tilbage</button>
         <button class="btn-blue" style="flex:1;padding:14px" onclick="submitForm()" type="button">Få mine 3 gratis tilbud →</button>
@@ -2821,6 +2822,7 @@
           <option>Andelsbolig</option>
         </select>
       </div>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true"/>
       <button class="btn-blue" style="width:100%;padding:16px;font-size:15px" onclick="handleMainFormSubmit(this)">Få mine 3 gratis mæglertilbud →</button>
       <p style="font-size:11px;color:#AEAEB2;text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -3389,9 +3391,35 @@ document.getElementById('exit-overlay').addEventListener('click', (e) => {
 // =========================================================
 let currentStep = 0;
 
+async function submitLead(payload) {
+  try {
+    const r = await fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await r.json().catch(() => ({}));
+    return { ok: r.ok && data.ok, error: data.error };
+  } catch (e) {
+    return { ok: false, error: 'Network error' };
+  }
+}
+
 function openModal() {
   currentStep = 0;
   updateStep();
+  // Prefill from hero form if values were entered there.
+  const heroAddr = document.getElementById('hero-address');
+  const heroType = document.getElementById('hero-type');
+  const mAddr = document.getElementById('m-address');
+  if (heroAddr && mAddr && heroAddr.value.trim() && !mAddr.value.trim()) {
+    mAddr.value = heroAddr.value.trim();
+  }
+  if (heroType && heroType.value) {
+    document.querySelectorAll('.prop-type-btn').forEach(b => {
+      b.classList.toggle('selected', b.dataset.value === heroType.value);
+    });
+  }
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -3426,13 +3454,13 @@ function updateStep() {
   if (fill) fill.style.width = ((currentStep + 1) / 3 * 100) + '%';
 }
 
-function submitForm() {
-  const fname = document.getElementById('m-fname').value.trim();
-  const email = document.getElementById('m-email').value.trim();
-  const phone = document.getElementById('m-phone').value.trim();
+async function submitForm() {
+  const fnameEl = document.getElementById('m-fname');
+  const lnameEl = document.getElementById('m-lname');
+  const emailEl = document.getElementById('m-email');
+  const phoneEl = document.getElementById('m-phone');
   let valid = true;
-  [document.getElementById('m-fname'), document.getElementById('m-lname'),
-   document.getElementById('m-email'), document.getElementById('m-phone')].forEach(inp => {
+  [fnameEl, lnameEl, emailEl, phoneEl].forEach(inp => {
     if (!inp.value.trim()) {
       inp.style.borderColor = '#FF3B30';
       valid = false;
@@ -3441,7 +3469,58 @@ function submitForm() {
     }
   });
   if (!valid) return;
+
+  const btn = document.querySelector('#step-1 .btn-blue');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sender…';
+
+  const selectedType = document.querySelector('.prop-type-btn.selected');
+  const result = await submitLead({
+    source: 'modal',
+    propertyType: selectedType ? selectedType.dataset.value : '',
+    address: (document.getElementById('m-address').value || '').trim(),
+    firstName: fnameEl.value.trim(),
+    lastName: lnameEl.value.trim(),
+    email: emailEl.value.trim(),
+    phone: phoneEl.value.trim(),
+    website: document.getElementById('m-website') ? document.getElementById('m-website').value : '',
+  });
+
+  btn.disabled = false;
+  btn.textContent = originalText;
+
+  if (!result.ok) {
+    btn.style.background = '#FF3B30';
+    btn.textContent = 'Noget gik galt – prøv igen';
+    setTimeout(() => { btn.style.background = ''; btn.textContent = originalText; }, 2500);
+    return;
+  }
   nextStep();
+}
+
+async function submitExitForm(btn) {
+  const phoneEl = document.getElementById('exit-phone');
+  const phone = (phoneEl.value || '').trim();
+  if (!phone) {
+    phoneEl.style.borderColor = '#FF3B30';
+    return;
+  }
+  phoneEl.style.borderColor = '';
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sender…';
+  const result = await submitLead({ source: 'exit-popup', phone });
+  btn.disabled = false;
+  btn.textContent = originalText;
+  if (!result.ok) {
+    btn.style.background = '#FF3B30';
+    btn.textContent = 'Fejl – prøv igen';
+    setTimeout(() => { btn.style.background = ''; btn.textContent = originalText; }, 2500);
+    return;
+  }
+  closeExit();
+  openModal();
 }
 
 document.getElementById('modal-overlay').addEventListener('click', (e) => {
@@ -3607,9 +3686,9 @@ menuBtn.addEventListener('click', () => {
 // =========================================================
 // 14. MAIN FORM SUBMIT
 // =========================================================
-function handleMainFormSubmit(btn) {
+async function handleMainFormSubmit(btn) {
   const form = btn.closest('.form-card');
-  const inputs = form.querySelectorAll('input, select');
+  const inputs = form.querySelectorAll('input:not([type=hidden]), select');
   let valid = true;
   inputs.forEach(inp => {
     if (!inp.value.trim()) {
@@ -3620,15 +3699,38 @@ function handleMainFormSubmit(btn) {
     }
   });
   if (!valid) {
-    // Shake animation on button
     btn.style.transform = 'translateX(-4px)';
     setTimeout(() => { btn.style.transform = 'translateX(4px)'; }, 80);
     setTimeout(() => { btn.style.transform = ''; }, 160);
     return;
   }
+
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sender…';
+
+  const hp = form.querySelector('input[name="website"]');
+  const result = await submitLead({
+    source: 'main-form',
+    firstName: (document.getElementById('cf-fname').value || '').trim(),
+    lastName: (document.getElementById('cf-lname').value || '').trim(),
+    email: (document.getElementById('cf-email').value || '').trim(),
+    phone: (document.getElementById('cf-phone').value || '').trim(),
+    address: (document.getElementById('cf-addr').value || '').trim(),
+    propertyType: (document.getElementById('cf-type').value || '').trim(),
+    website: hp ? hp.value : '',
+  });
+
+  if (!result.ok) {
+    btn.disabled = false;
+    btn.style.background = '#FF3B30';
+    btn.textContent = 'Noget gik galt – prøv igen';
+    setTimeout(() => { btn.style.background = ''; btn.textContent = originalText; }, 2500);
+    return;
+  }
+
   btn.textContent = 'Tak! Vi kontakter dig inden for 24 timer';
   btn.style.background = '#34C759';
-  btn.disabled = true;
   btn.style.cursor = 'default';
 }
 </script>
