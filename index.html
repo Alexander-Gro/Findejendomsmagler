@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>FindEjendomsmægler.nu – Find din rigtige mægler gratis</title>
   <meta name="description" content="Gratis matching med de 3 bedste lokale ejendomsmæglere. Svar inden for 48 timer. Betroet af 12.000+ boligsælgere i Danmark."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -1490,6 +1490,119 @@
     ========================================================= */
     .maplibregl-ctrl-logo { display: none !important; }
     .maplibregl-popup-tip { border-top-color: #fff !important; }
+
+    /* =========================================================
+       RESPONSIVE — TABLET (769px–1024px)
+    ========================================================= */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .hero { padding: 72px 0 88px; min-height: 680px; }
+      .sold-card { flex: 0 0 300px; }
+      .bento-grid { grid-auto-rows: 180px; }
+      .bento-metric { font-size: 38px; }
+      .bento-metric-sm { font-size: 30px; }
+    }
+
+    /* =========================================================
+       RESPONSIVE — MOBILE + TABLET (≤900px)
+    ========================================================= */
+    @media (max-width: 900px) {
+      .bento-section, .sold-section, .map-section, .testi-section,
+      .cta-section, .faq-section, .protect-section, .compare-section,
+      .screen-section, .contract-section, .nextsteps-section,
+      .steps-section { padding: 72px 0; }
+    }
+
+    /* =========================================================
+       RESPONSIVE — MOBILE (≤640px)
+    ========================================================= */
+    @media (max-width: 640px) {
+      /* Section rhythm */
+      .bento-section, .sold-section, .map-section, .testi-section,
+      .cta-section, .faq-section, .protect-section, .compare-section,
+      .screen-section, .contract-section, .nextsteps-section,
+      .steps-section { padding: 60px 0; }
+
+      /* Hero */
+      .hero { padding: 60px 0 68px; min-height: unset; }
+      .hero-h1 { letter-spacing: -1px; }
+      .hero-sub { font-size: 16px; margin-bottom: 28px; }
+      .hero-live-badge { margin-bottom: 18px; font-size: 12px; }
+      .trust-pill { font-size: 13px; margin-bottom: 36px; }
+
+      /* Map */
+      #map { height: 300px !important; }
+      .map-legend { flex-wrap: wrap; gap: 12px 20px; }
+
+      /* Sold carousel */
+      .sold-card { flex: 0 0 min(300px, calc(100vw - 56px)); }
+      .sold-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+
+      /* Bento: fixed row height causes overflow on mobile */
+      .bento-grid { grid-auto-rows: auto; }
+      .bento-card { min-height: 110px; }
+      .bento-metric { font-size: 36px; }
+      .bento-metric-sm { font-size: 28px; }
+
+      /* CTA section */
+      .form-card { padding: 24px 20px; }
+      .cta-inner { gap: 32px; }
+
+      /* Modal */
+      .modal-card { padding: 28px 22px; border-radius: 20px; }
+      .prop-types { grid-template-columns: repeat(2, 1fr); }
+
+      /* Exit intent */
+      .exit-card { padding: 36px 24px; }
+
+      /* Compare columns */
+      .compare-col { padding: 24px 18px; }
+
+      /* Footer stack */
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      footer { padding-bottom: max(32px, env(safe-area-inset-bottom, 32px)); }
+
+      /* FAQ */
+      .faq-trigger { font-size: 15px; }
+
+      /* Float button: respect notch/home-bar safe area */
+      .float-btn {
+        bottom: max(20px, env(safe-area-inset-bottom, 20px));
+        right: max(20px, env(safe-area-inset-right, 20px));
+      }
+
+      /* Social proof toast: move to top to avoid float button collision */
+      .sp-toast {
+        bottom: auto;
+        top: 82px;
+        left: 16px;
+        right: 16px;
+        max-width: none;
+        transform: translateY(calc(-100% - 20px));
+        transition: transform 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .sp-toast.visible { transform: translateY(0); }
+
+      /* Modal close button: enlarge touch target to 44×44 */
+      .modal-card > button:first-of-type,
+      .exit-card > button:first-of-type {
+        width: 44px; height: 44px;
+        display: flex; align-items: center; justify-content: center;
+      }
+    }
+
+    /* =========================================================
+       RESPONSIVE — SMALL PHONE (≤390px)
+    ========================================================= */
+    @media (max-width: 390px) {
+      .hero-h1 { letter-spacing: -0.5px; }
+      .modal-card { padding: 24px 18px; }
+      .prop-types { gap: 8px; }
+      .prop-type-btn { padding: 12px 8px; }
+      .sold-card { flex: 0 0 calc(100vw - 48px); }
+      .stat { padding: 6px 8px; }
+      .stat-n { font-size: 20px; }
+      .hero-stats { padding: 12px; }
+    }
   </style>
 </head>
 <body>
