@@ -528,10 +528,10 @@
     .step-num-circle {
       width: 44px; height: 44px;
       border-radius: var(--radius-sm);
-      background: transparent;
-      color: var(--blue);
+      background: var(--text);
+      color: #fff;
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       letter-spacing: -0.02em;
       display: flex;
@@ -540,7 +540,6 @@
       margin: 0 auto 24px;
       position: relative;
       z-index: 1;
-      border: 1px solid var(--border-strong);
       box-shadow: 0 0 0 8px var(--bg);
     }
     .step-item h3 {
@@ -565,16 +564,24 @@
       .steps-flow::before { display: none; }
       .step-item {
         padding: 0;
-        display: flex;
-        gap: 20px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          'num head'
+          'num body';
+        column-gap: 20px;
+        row-gap: 4px;
         text-align: left;
-        align-items: flex-start;
+        align-items: start;
       }
       .step-num-circle {
+        grid-area: num;
         margin: 0;
         flex-shrink: 0;
         box-shadow: none;
       }
+      .step-item h3 { grid-area: head; align-self: center; }
+      .step-item p { grid-area: body; }
     }
 
     /* =========================================================
@@ -1104,9 +1111,10 @@
        PROTECT SECTION (Point 1)
     ========================================================= */
     .protect-section {
-      background: var(--bg-alt);
+      background: var(--bg);
       padding: var(--section-y) 0;
       position: relative;
+      border-top: 1px solid var(--border);
     }
     .protect-intro {
       display: grid;
@@ -1158,7 +1166,7 @@
     /* =========================================================
        COMPARISON SECTION (Point 4)
     ========================================================= */
-    .compare-section { padding: var(--section-y) 0; background: var(--bg); }
+    .compare-section { padding: var(--section-y) 0; background: var(--bg-alt); border-top: 1px solid var(--border); }
     .compare-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1200,52 +1208,69 @@
     /* =========================================================
        SCREENING SECTION (Point 5)
     ========================================================= */
-    .screen-section { padding: var(--section-y) 0; background: var(--bg-alt); }
+    .screen-section { padding: var(--section-y) 0; background: var(--bg-alt); border-top: 1px solid rgba(20,22,28,0.04); }
     .screen-list {
       margin-top: clamp(28px, 3.5vw, 44px);
       display: flex;
       flex-direction: column;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
+      border-top: 1px solid var(--border-strong);
     }
     .screen-item {
-      display: flex;
-      gap: 20px;
-      padding: 22px 28px;
-      align-items: flex-start;
-      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      column-gap: 28px;
+      padding: 26px 4px;
+      align-items: start;
+      border-bottom: 1px solid var(--border-strong);
     }
-    .screen-item:last-child { border-bottom: none; }
     .screen-item-num {
-      font-size: 13px; font-weight: 700;
-      color: var(--blue);
-      min-width: 30px; height: 30px;
-      border-radius: var(--radius-sm);
-      background: rgba(0,88,184,0.08);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-3);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      padding-top: 1px;
     }
     .screen-item-head {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
       flex-wrap: wrap;
       margin-bottom: 6px;
     }
-    .screen-item-head h4 { font-size: 15px; font-weight: 600; color: var(--text); margin: 0; letter-spacing: -0.005em; }
-    .screen-item p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+    .screen-item-head h4 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+    .screen-item p {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.55;
+      max-width: 60ch;
+    }
     .screen-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(30,158,74,0.10); color: #14722E;
-      border: 1px solid rgba(30,158,74,0.22);
-      border-radius: var(--radius-xs);
-      padding: 2px 7px; font-size: 11px; font-weight: 600;
-      letter-spacing: 0.01em;
+      color: var(--text-3);
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.005em;
       white-space: nowrap;
+    }
+    .screen-badge svg { color: var(--green); flex-shrink: 0; }
+    @media (max-width: 640px) {
+      .screen-item {
+        grid-template-columns: 32px 1fr;
+        column-gap: 16px;
+        padding: 22px 0;
+      }
+      .screen-item-num { font-size: 17px; }
+      .screen-item-head h4 { font-size: 16px; }
+      .screen-item p { font-size: 14px; }
     }
 
     /* =========================================================
