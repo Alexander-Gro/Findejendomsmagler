@@ -13,33 +13,33 @@
        DESIGN TOKENS
     ========================================================= */
     :root {
-      --bg: #F8F6F2;
-      --bg-alt: #EDE9E1;
-      --bg-dark: #1A1612;
+      --bg: #FFFFFF;
+      --bg-alt: #F4F7FB;
+      --bg-dark: #0E1116;
       --card: #FFFFFF;
       --text: #16181D;
       --text-2: #3A3D45;
-      --text-3: #595C65;
+      --text-3: #6B6E76;
       --text-4: #A6A9B0;
-      --blue: #1D4E89;
-      --blue-hover: #163E6E;
-      --gold: #B8820F;
+      --blue: #0058B8;
+      --blue-hover: #004794;
+      --gold: #C18A11;
       --green: #1E9E4A;
       --red: #D63A2E;
-      --sand: #C8BC9E;
-      --sand-subtle: rgba(200,188,158,0.18);
+      --sand: #B8C4D4;
+      --sand-subtle: rgba(0,88,184,0.08);
       --border: rgba(20,22,28,0.08);
       --border-strong: rgba(20,22,28,0.14);
       --radius-xs: 3px;
-      --radius-sm: 4px;
+      --radius-sm: 5px;
       --radius-md: 7px;
-      --radius-card: 12px;
-      --radius-lg: 14px;
+      --radius-card: 8px;
+      --radius-lg: 10px;
       --radius-pill: 999px;
-      --shadow-card: 0 1px 0 rgba(60,40,20,0.04), 0 2px 6px rgba(60,40,20,0.06);
-      --shadow-raised: 0 1px 0 rgba(60,40,20,0.05), 0 4px 14px rgba(60,40,20,0.08);
-      --shadow-hover: 0 1px 0 rgba(60,40,20,0.06), 0 8px 28px rgba(60,40,20,0.13);
-      --ring: 0 0 0 3px rgba(29,78,137,0.22);
+      --shadow-card: 0 1px 0 rgba(20,22,28,0.04), 0 1px 2px rgba(20,22,28,0.05);
+      --shadow-raised: 0 1px 0 rgba(20,22,28,0.05), 0 3px 8px rgba(20,22,28,0.06);
+      --shadow-hover: 0 1px 0 rgba(20,22,28,0.06), 0 6px 18px rgba(20,22,28,0.09);
+      --ring: 0 0 0 3px rgba(0,88,184,0.22);
       --transition: 180ms cubic-bezier(0.22,0.68,0,1);
       --font-display: 'Schibsted Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -248,7 +248,6 @@
       display: flex;
       align-items: center;
       isolation: isolate;
-      border-bottom: 1px solid var(--border);
       color: #fff;
     }
     .hero-bg {
@@ -512,8 +511,6 @@
     .brands-section {
       padding: clamp(40px, 5vw, 56px) 0;
       background: var(--bg);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
       overflow: hidden;
     }
     .brands-header {
@@ -686,11 +683,8 @@
     .editorial-figure {
       position: relative;
       overflow: hidden;
-      border-radius: clamp(12px, 1.4vw, 20px);
+      border-radius: 6px;
       background: var(--bg-alt);
-      box-shadow:
-        0 1px 0 rgba(20,22,28,0.05),
-        0 18px 44px -22px rgba(20,22,28,0.18);
     }
     .editorial-figure.tall { aspect-ratio: 3 / 4; }
     .editorial-side {
@@ -1272,7 +1266,6 @@
       background: var(--bg);
       padding: var(--section-y) 0;
       position: relative;
-      border-top: 1px solid var(--border);
     }
     .protect-intro {
       display: grid;
@@ -1324,7 +1317,7 @@
     /* =========================================================
        COMPARISON SECTION (Point 4)
     ========================================================= */
-    .compare-section { padding: var(--section-y) 0; background: var(--bg-alt); border-top: 1px solid var(--border); }
+    .compare-section { padding: var(--section-y) 0; background: var(--bg-alt); }
     .compare-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1366,7 +1359,7 @@
     /* =========================================================
        SCREENING SECTION (Point 5)
     ========================================================= */
-    .screen-section { padding: var(--section-y) 0; background: var(--bg-alt); border-top: 1px solid rgba(20,22,28,0.04); }
+    .screen-section { padding: var(--section-y) 0; background: var(--bg-alt); }
     .screen-list {
       margin-top: clamp(28px, 3.5vw, 44px);
       display: flex;
@@ -1732,7 +1725,6 @@
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <span class="hero-eyebrow">Gratis matching · 0 kr ved ingen salg</span>
       <h1 class="hero-h1">
         Find <em>den rigtige</em> mægler til din bolig
       </h1>
