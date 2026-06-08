@@ -230,9 +230,7 @@
     .hero {
       position: relative;
       overflow: hidden;
-      padding: clamp(56px, 7vw, 96px) 0 clamp(64px, 8vw, 104px);
-      display: flex;
-      align-items: center;
+      padding: clamp(40px, 5vw, 72px) 0 clamp(56px, 7vw, 96px);
       background: var(--bg);
       border-bottom: 1px solid var(--border);
     }
@@ -240,24 +238,53 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      width: min(1200px, 100% - 48px);
+      width: min(1240px, 100% - 48px);
       margin-inline: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: clamp(28px, 4vw, 56px);
+      align-items: center;
+    }
+
+    .hero-copy {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      max-width: 600px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
       align-items: center;
-      text-align: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px 6px 8px;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(30,158,74,0.18);
     }
 
     .hero-h1 {
       font-family: var(--font-display);
-      font-size: clamp(36px, 4.4vw, 60px);
+      font-size: clamp(40px, 5.2vw, 68px);
       font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.06;
-      margin: 0 auto 22px;
+      letter-spacing: -0.028em;
+      line-height: 1.02;
+      margin: 0 0 20px;
       color: var(--text);
       width: 100%;
-      max-width: 680px;
       text-wrap: balance;
     }
     .hero-h1 em {
@@ -267,11 +294,11 @@
     }
 
     .hero-sub {
-      font-size: clamp(17px, 1.5vw, 20px);
+      font-size: clamp(17px, 1.35vw, 19px);
       color: var(--text-2);
-      line-height: 1.5;
-      max-width: 48ch;
-      margin: 0 auto 36px;
+      line-height: 1.55;
+      max-width: 46ch;
+      margin: 0 0 28px;
       text-wrap: pretty;
     }
 
@@ -282,8 +309,75 @@
       padding: 8px;
       box-shadow: var(--shadow-card);
       width: 100%;
-      max-width: 680px;
-      margin-bottom: 28px;
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+
+    /* Hero image side */
+    .hero-visual {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: clamp(12px, 1.4vw, 20px);
+      overflow: hidden;
+      background: var(--bg-alt);
+      box-shadow:
+        0 1px 0 rgba(20,22,28,0.06),
+        0 24px 60px -20px rgba(20,22,28,0.22);
+    }
+    .hero-visual img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1200ms cubic-bezier(0.22,0.68,0,1);
+    }
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(14,17,22,0.18) 100%);
+      pointer-events: none;
+    }
+    .hero-visual-badge {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      background: rgba(14,17,22,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius-pill);
+      padding: 7px 12px 7px 10px;
+      letter-spacing: 0.01em;
+    }
+    .hero-visual-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #34C759;
+      box-shadow: 0 0 0 3px rgba(52,199,89,0.25);
+    }
+
+    @media (max-width: 960px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: clamp(28px, 5vw, 44px);
+      }
+      .hero-copy { max-width: 680px; margin-inline: auto; align-items: flex-start; }
+      .hero-visual { aspect-ratio: 16 / 10; max-width: 680px; margin-inline: auto; }
+    }
+    @media (max-width: 560px) {
+      .hero-copy { align-items: stretch; text-align: left; }
+      .hero-h1 { font-size: clamp(34px, 9.5vw, 44px); }
     }
     .hero-form-row {
       display: flex;
@@ -364,7 +458,7 @@
       font-size: 14px;
       font-weight: 500;
       color: var(--text-2);
-      margin-bottom: 48px;
+      margin-bottom: 28px;
     }
     .avatar-stack {
       display: flex;
@@ -389,7 +483,7 @@
       border-radius: var(--radius-sm);
       padding: 18px 8px;
       width: 100%;
-      max-width: 580px;
+      max-width: 600px;
     }
     .stat { flex: 1; text-align: center; padding: 0 16px; min-width: 0; }
     .stat-n {
@@ -581,6 +675,79 @@
       }
       .step-item h3 { grid-area: head; align-self: center; }
       .step-item p { grid-area: body; }
+    }
+
+    /* =========================================================
+       EDITORIAL IMAGE BREAK
+    ========================================================= */
+    .editorial {
+      padding: clamp(48px, 6vw, 80px) 0;
+      background: var(--bg);
+    }
+    .editorial-inner {
+      width: min(1240px, 100% - 48px);
+      margin-inline: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: clamp(20px, 2.4vw, 36px);
+      align-items: stretch;
+    }
+    .editorial-figure {
+      position: relative;
+      overflow: hidden;
+      border-radius: clamp(12px, 1.4vw, 20px);
+      background: var(--bg-alt);
+      box-shadow:
+        0 1px 0 rgba(20,22,28,0.05),
+        0 18px 44px -22px rgba(20,22,28,0.18);
+    }
+    .editorial-figure.tall { aspect-ratio: 4 / 5; }
+    .editorial-side {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(20px, 2.4vw, 36px);
+      justify-content: space-between;
+    }
+    .editorial-figure.short {
+      aspect-ratio: 5 / 4;
+      flex: 1;
+    }
+    .editorial-figure img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1400ms cubic-bezier(0.22,0.68,0,1);
+    }
+    .editorial-figure:hover img { transform: scale(1.025); }
+    .editorial-caption {
+      padding: 4px 4px;
+    }
+    .editorial-caption h2 {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 2.4vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+      text-wrap: balance;
+    }
+    .editorial-caption h2 em {
+      font-style: italic;
+      font-weight: 700;
+    }
+    .editorial-caption p {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.6;
+      max-width: 36ch;
+    }
+    @media (max-width: 760px) {
+      .editorial-inner { grid-template-columns: 1fr; }
+      .editorial-figure.tall { aspect-ratio: 4 / 3; }
+      .editorial-figure.short { aspect-ratio: 5 / 4; }
     }
 
     /* =========================================================
@@ -1564,67 +1731,74 @@
 ========================================================= -->
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <h1 class="hero-h1">
-      Find <em>den rigtige</em> mægler<br>
-      til din bolig
-    </h1>
-    <p class="hero-sub">Gratis matching med de 3 bedste lokale mæglere. Svar inden for 48 timer, ingen binding.</p>
+    <div class="hero-copy">
+      <span class="hero-eyebrow">Gratis matching · 0 kr ved ingen salg</span>
+      <h1 class="hero-h1">
+        Find <em>den rigtige</em> mægler til din bolig
+      </h1>
+      <p class="hero-sub">Vi finder de 3 bedste lokale mæglere, forhandler salæret ned og gennemgår kontrakten for dig. Svar inden for 48 timer.</p>
 
-    <!-- Hero inline form -->
-    <div class="hero-form-card">
-      <div class="hero-form-row">
-        <div class="hf-input-group">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <input type="text" class="hf-input" placeholder="Din boligsadresse..." id="hero-address" aria-label="Boligsadresse"/>
+      <!-- Hero inline form -->
+      <div class="hero-form-card">
+        <div class="hero-form-row">
+          <div class="hf-input-group">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input type="text" class="hf-input" placeholder="Din boligsadresse..." id="hero-address" aria-label="Boligsadresse"/>
+          </div>
+          <select class="hf-select" id="hero-type" aria-label="Boligtype">
+            <option value="">Boligtype</option>
+            <option>Villa</option>
+            <option>Rækkehus</option>
+            <option>Lejlighed</option>
+            <option>Fritidshus</option>
+            <option>Andelsbolig</option>
+          </select>
+          <button class="btn-blue hf-btn" onclick="openModal()" aria-label="Få 3 gratis tilbud">
+            Få 3 gratis tilbud
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
         </div>
-        <select class="hf-select" id="hero-type" aria-label="Boligtype">
-          <option value="">Boligtype</option>
-          <option>Villa</option>
-          <option>Rækkehus</option>
-          <option>Lejlighed</option>
-          <option>Fritidshus</option>
-          <option>Andelsbolig</option>
-        </select>
-        <button class="btn-blue hf-btn" onclick="openModal()" aria-label="Få 3 gratis tilbud">
-          Få 3 gratis tilbud
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
+      </div>
+
+      <!-- Trust pill -->
+      <div class="trust-pill">
+        <div class="avatar-stack" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
+        </div>
+        <span>Betroet af <strong>12.000+</strong> boligsælgere i Danmark</span>
+      </div>
+
+      <!-- Hero stats -->
+      <div class="hero-stats" role="list" aria-label="Nøgletal">
+        <div class="stat" role="listitem">
+          <div class="stat-n" data-count="2400" data-suffix="+">2.400+</div>
+          <div class="stat-l">Godkendte mæglere</div>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat" role="listitem">
+          <div class="stat-n" data-count="98" data-suffix="%">98%</div>
+          <div class="stat-l">Tilfredse sælgere</div>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat" role="listitem">
+          <div class="stat-n">0 kr</div>
+          <div class="stat-l">Det koster dig</div>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat" role="listitem">
+          <div class="stat-n">&lt;48t</div>
+          <div class="stat-l">Til du har svar</div>
+        </div>
       </div>
     </div>
 
-    <!-- Trust pill -->
-    <div class="trust-pill">
-      <div class="avatar-stack" aria-hidden="true">
-        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
-        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=56&h=56&fit=crop&auto=format&q=80" alt="" width="32" height="32" loading="lazy"/>
-      </div>
-      <span>Betroet af <strong>12.000+</strong> boligsælgere i Danmark</span>
-    </div>
-
-    <!-- Hero stats -->
-    <div class="hero-stats" role="list" aria-label="Nøgletal">
-      <div class="stat" role="listitem">
-        <div class="stat-n" data-count="2400" data-suffix="+">2.400+</div>
-        <div class="stat-l">Godkendte mæglere</div>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat" role="listitem">
-        <div class="stat-n" data-count="98" data-suffix="%">98%</div>
-        <div class="stat-l">Tilfredse sælgere</div>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat" role="listitem">
-        <div class="stat-n">0 kr</div>
-        <div class="stat-l">Det koster dig</div>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat" role="listitem">
-        <div class="stat-n">&lt;48t</div>
-        <div class="stat-l">Til du har svar</div>
-      </div>
-    </div>
+    <figure class="hero-visual">
+      <img src="/images/villa-exterior.jpg" alt="Moderne dansk villa med pejs-tag, panoramavinduer og integreret carport" width="1600" height="1067" fetchpriority="high"/>
+      <span class="hero-visual-badge">Sælges via vores mæglernetværk</span>
+    </figure>
   </div>
 </section>
 
@@ -1654,6 +1828,27 @@
     </div>
     <div style="text-align:center;margin-top:40px" class="reveal reveal-d3">
       <button class="btn-blue" style="padding:14px 32px;font-size:16px" onclick="openModal()">Start nu – det tager under 2 min</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     EDITORIAL IMAGE MOMENT
+========================================================= -->
+<section class="editorial reveal" aria-label="Boligejer-billeder">
+  <div class="editorial-inner">
+    <figure class="editorial-figure tall">
+      <img src="/images/interior-living.jpg" alt="Lys, skandinavisk stue med arbejdsbord, grønne planter og naturligt lys" loading="lazy" width="1600" height="1067"/>
+    </figure>
+    <div class="editorial-side">
+      <figure class="editorial-figure short">
+        <img src="/images/terrace-detail.jpg" alt="Terrasse med to bænke med fåreskind og morgenlys gennem glasdøre" loading="lazy" width="1600" height="1067"/>
+      </figure>
+      <div class="editorial-caption">
+        <h2>Din bolig er <em>mere</em> end et tal i et salgsoplæg.</h2>
+        <p>Vi finder mæglere der forstår dit hus, dit kvarter og din pris. Du beslutter selv hvem du møder, og hvem du sælger igennem.</p>
+      </div>
     </div>
   </div>
 </section>
