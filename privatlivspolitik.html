@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Privatlivspolitik – FindEjendomsmægler.nu</title>
+  <meta name="description" content="Privatlivspolitik, handelsbetingelser og cookiepolitik for FindEjendomsmægler.nu."/>
+  <meta name="robots" content="noindex,follow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Schibsted+Grotesk:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #FAFAF7;
+      --bg-alt: #F2F2EE;
+      --bg-dark: #0E1116;
+      --card: #FFFFFF;
+      --text: #16181D;
+      --text-2: #3A3D45;
+      --text-3: #6B6E76;
+      --blue: #0058B8;
+      --blue-hover: #004794;
+      --border: rgba(20,22,28,0.08);
+      --border-strong: rgba(20,22,28,0.14);
+      --radius-sm: 5px;
+      --radius-card: 10px;
+      --transition: 180ms cubic-bezier(0.22,0.68,0,1);
+      --font-display: 'Schibsted Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1200px, 100% - 48px);
+      margin-inline: auto;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      height: 64px;
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(24px, calc((100% - 1200px) / 2));
+      transition: border-color var(--transition);
+    }
+    header.scrolled { border-bottom-color: var(--border); }
+    .logo {
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text);
+      letter-spacing: -0.018em;
+    }
+    .logo em { color: var(--blue); font-style: normal; }
+    .logo:hover { text-decoration: none; }
+    .btn-blue {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--blue);
+      color: #fff;
+      border: 1px solid var(--blue);
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      min-height: 38px;
+    }
+    .btn-blue:hover { background: var(--blue-hover); border-color: var(--blue-hover); text-decoration: none; }
+
+    /* Page content */
+    .legal {
+      padding: clamp(48px, 7vw, 80px) 0 clamp(64px, 9vw, 112px);
+    }
+    .legal-inner {
+      max-width: 760px;
+      margin-inline: auto;
+    }
+    .legal .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 14px;
+    }
+    .legal h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .legal .updated {
+      font-size: 14px;
+      color: var(--text-3);
+      margin-bottom: 40px;
+    }
+    .legal .intro {
+      font-size: 17px;
+      color: var(--text-2);
+      margin-bottom: 32px;
+    }
+    .legal h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(24px, 2.6vw, 30px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin: 56px 0 12px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .legal h2:first-of-type { border-top: none; padding-top: 0; margin-top: 8px; }
+    .legal h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.012em;
+      color: var(--text);
+      margin: 28px 0 8px;
+    }
+    .legal p {
+      color: var(--text-2);
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+    .legal ul {
+      list-style: none;
+      margin: 8px 0 18px;
+      padding: 0;
+    }
+    .legal ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+      color: var(--text-2);
+      font-size: 16px;
+    }
+    .legal ul li::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 11px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+    .legal .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 20px 24px;
+      margin: 12px 0 8px;
+      font-size: 15px;
+      color: var(--text-2);
+    }
+    .legal .contact-card strong { color: var(--text); }
+    .legal .contact-card div { margin: 2px 0; }
+
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.015em;
+    }
+    .footer-logo em { color: #6EAEFF; font-style: normal; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 6px; }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.72);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: #fff; text-decoration: none; }
+    .footer-bottom {
+      padding-top: 24px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+    }
+    @media (max-width: 720px) {
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      footer { padding-bottom: max(32px, env(safe-area-inset-bottom, 32px)); }
+    }
+  </style>
+</head>
+<body>
+
+<header id="site-header">
+  <a href="/" class="logo" aria-label="FindEjendomsmægler hjem">find<em>ejendoms</em>mægler.nu</a>
+  <a href="/" class="btn-blue">Tilbage til forsiden</a>
+</header>
+
+<main class="legal">
+  <div class="container">
+    <div class="legal-inner">
+
+      <span class="eyebrow">Juridisk</span>
+      <h1>Privatlivspolitik</h1>
+      <p class="updated">Sidst opdateret: 10/11/2025</p>
+      <p class="intro">Denne privatlivspolitik forklarer, hvordan FindEjendomsmægler.nu (“vi”, “os”) indsamler, behandler og beskytter dine personoplysninger i forbindelse med brug af FindEjendomsmægler.nu.</p>
+
+      <h2>1. Dataansvarlig</h2>
+      <div class="contact-card">
+        <div><strong>FindEjendomsmægler.nu</strong></div>
+        <div>E-mail: <a href="mailto:info@findejendomsmægler.nu">info@findejendomsmægler.nu</a></div>
+        <div>Adresse: Centerholmen 16, 2670 Greve</div>
+      </div>
+
+      <h2>2. Hvilke personoplysninger indsamler vi?</h2>
+      <p>Vi kan indsamle:</p>
+      <ul>
+        <li>Kontaktoplysninger (navn, e-mail, telefon, adresse)</li>
+        <li>Brugsdata (IP-adresse, browser, enhed)</li>
+        <li>Cookies (se cookiepolitik nedenfor)</li>
+      </ul>
+
+      <h2>3. Formål og behandlingsgrundlag</h2>
+      <p>Vi behandler dine oplysninger til følgende formål:</p>
+      <ul>
+        <li>Drift og forbedring af hjemmesiden (legitim interesse, GDPR art. 6(1)(f))</li>
+        <li>Kundeservice og henvendelser (samtykke/kontrakt)</li>
+        <li>Nyhedsbreve (samtykke, art. 6(1)(a))</li>
+        <li>Ordrehåndtering (kontrakt, art. 6(1)(b))</li>
+        <li>Marketing (samtykke)</li>
+      </ul>
+
+      <h2>4. Opbevaring</h2>
+      <p>Vi opbevarer dine data kun så længe det er nødvendigt til formålet eller maksimalt i 1 år.</p>
+
+      <h2>5. Deling af oplysninger</h2>
+      <p>Vi kan dele oplysninger med:</p>
+      <ul>
+        <li>Relevante ejendomsmæglere</li>
+      </ul>
+
+      <h2>6. Dine rettigheder</h2>
+      <p>Du har ret til:</p>
+      <ul>
+        <li>Indsigt</li>
+        <li>Retting</li>
+        <li>Sletning</li>
+        <li>Begrænsning</li>
+        <li>Dataportabilitet</li>
+        <li>At trække samtykke tilbage</li>
+        <li>At klage til Datatilsynet</li>
+      </ul>
+      <p>Kontakt os på <a href="mailto:info@findejendomsmægler.nu">info@findejendomsmægler.nu</a> for at udøve dine rettigheder.</p>
+
+      <h2>7. Sikkerhed</h2>
+      <p>Vi beskytter dine data gennem passende tekniske og organisatoriske foranstaltninger.</p>
+
+      <h2>8. Kontakt</h2>
+      <p>Spørgsmål? Kontakt os på <a href="mailto:info@findejendomsmægler.nu">info@findejendomsmægler.nu</a>.</p>
+
+      <h2 id="vilkaar">Vilkår &amp; Betingelser</h2>
+      <p class="updated" style="margin-top:-4px;margin-bottom:24px;">Sidst opdateret: 10/11/2025</p>
+      <p>Ved brug af FindEjendomsmægler.nu accepterer du følgende vilkår.</p>
+
+      <h3>1. Generelt</h3>
+      <p>Websiden ejes af FindEjendomsmægler.nu.</p>
+
+      <h3>2. Brug af hjemmesiden</h3>
+      <p>Du må ikke misbruge siden, forsøge at få uautoriseret adgang eller skade funktionaliteten.</p>
+
+      <h3>3. Produkter/tjenester</h3>
+      <ul>
+        <li>Levering sker via e-mail og/eller telefonisk</li>
+      </ul>
+
+      <h3>4. Fortrydelsesret</h3>
+      <p>Private forbrugere har 14 dages fortrydelsesret jf. dansk lovgivning.</p>
+
+      <h3>5. Ansvarsfraskrivelse</h3>
+      <p>Vi garanterer ikke at hjemmesiden er uden fejl, men bestræber os på stabil drift.</p>
+
+      <h3>6. Ændringer</h3>
+      <p>Vilkårene kan opdateres løbende. Dato for seneste opdatering fremgår øverst.</p>
+
+      <h2 id="cookies">Cookiepolitik</h2>
+      <p class="updated" style="margin-top:-4px;margin-bottom:24px;">Sidst opdateret: 10.11.2025</p>
+
+      <h3>1. Hvad er cookies?</h3>
+      <p>Cookies er små tekstfiler, der gemmes på din enhed. De bruges til at få hjemmesiden til at fungere korrekt, analysere trafik og personalisere indhold.</p>
+
+      <h3>2. Typer af cookies vi bruger</h3>
+      <ul>
+        <li>Nødvendige cookies – kræves for at hjemmesiden fungerer</li>
+        <li>Statistikcookies – analyserer brug af hjemmesiden</li>
+        <li>Marketingcookies – bruges til annoncering</li>
+      </ul>
+
+      <h3>3. Samtykke</h3>
+      <p>Når du besøger vores hjemmeside første gang, bliver du bedt om at give samtykke til cookies — du kan acceptere, afvise eller vælge specifikke kategorier.</p>
+
+      <h3>4. Ændring eller tilbagetrækning af samtykke</h3>
+      <p>Du kan altid ændre dine cookieindstillinger via cookie-ikonet på siden.</p>
+
+      <h3>5. Opbevaring</h3>
+      <p>Cookies opbevares typisk i 30 dage – 2 år afhængigt af formålet.</p>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner container">
+    <div>
+      <div class="footer-logo">find<em>ejendoms</em>mægler.nu</div>
+      <div class="footer-tagline">Vi finder den rigtige mægler til dig</div>
+    </div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="/privatlivspolitik.html">Privatlivspolitik</a>
+      <a href="/privatlivspolitik.html#vilkaar">Handelsbetingelser</a>
+      <a href="/privatlivspolitik.html#cookies">Cookiepolitik</a>
+    </nav>
+  </div>
+  <div class="footer-bottom container">
+    <p>© 2025 FindEjendomsmægler.nu · CVR: 12345678 · kontakt@findejendomsmægler.nu</p>
+    <p style="margin-top:6px">FindEjendomsmægler.nu er en uafhængig matchingtjeneste og er ikke tilknyttet nogen specifik mæglerkæde.</p>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+</script>
+
+</body>
+</html>
