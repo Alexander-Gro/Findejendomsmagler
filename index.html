@@ -2245,6 +2245,21 @@ window.addEventListener('scroll', () => {
   else fb.classList.remove('visible');
 }, { passive: true });
 
+// Auto-open modal once user scrolls past ~55% of the page
+let autoModalShown = sessionStorage.getItem('autoModalShown') === '1';
+window.addEventListener('scroll', () => {
+  if (autoModalShown) return;
+  const overlay = document.getElementById('modal-overlay');
+  if (overlay && overlay.classList.contains('open')) return;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if (max <= 0) return;
+  if (window.scrollY / max >= 0.55) {
+    autoModalShown = true;
+    sessionStorage.setItem('autoModalShown', '1');
+    openModal();
+  }
+}, { passive: true });
+
 // =========================================================
 // 5. MULTI-STEP MODAL
 // =========================================================
