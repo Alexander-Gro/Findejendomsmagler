@@ -524,14 +524,23 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
-    .marquee-outer { overflow: hidden; }
+    .marquee-outer {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
     .marquee-track {
       display: flex;
       width: max-content;
-      gap: 64px;
       animation: marqueeSlide 30s linear infinite;
     }
-    .marquee-track-reverse { animation-direction: reverse; }
+    /* Two identical sets: -50% lands exactly on the start of set 2 → seamless loop */
+    .marquee-set {
+      display: flex;
+      align-items: center;
+      gap: clamp(48px, 7vw, 88px);
+      padding-right: clamp(48px, 7vw, 88px);
+    }
     .marquee-outer:hover .marquee-track { animation-play-state: paused; }
     @keyframes marqueeSlide {
       from { transform: translateX(0); }
@@ -540,18 +549,21 @@
     .brand-item {
       display: flex;
       align-items: center;
-      gap: 10px;
       white-space: nowrap;
-      opacity: 0.65;
+      opacity: 0.85;
       transition: opacity var(--transition);
       cursor: default;
     }
     .brand-item:hover { opacity: 1; }
-    .brand-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.018em;
+    .brand-logo {
+      display: block;
+      height: 28px;
+      width: auto;
+    }
+    .brand-logo-square { height: 44px; }
+    @media (max-width: 640px) {
+      .brand-logo { height: 22px; }
+      .brand-logo-square { height: 36px; }
     }
 
     /* =========================================================
@@ -1779,6 +1791,34 @@
           <div class="stat-n">&lt;48t</div>
           <div class="stat-l">Til du har svar</div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     BRAND MARQUEE
+========================================================= -->
+<section class="brands-section" aria-label="Mæglerkæder vi matcher med">
+  <div class="brands-header">
+    <p class="brands-title">Vi matcher dig med mæglere fra Danmarks førende kæder</p>
+  </div>
+  <div class="marquee-outer">
+    <div class="marquee-track">
+      <div class="marquee-set">
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/lokalbolig.svg" alt="LokalBolig" width="147" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo brand-logo-square" src="/images/brands/edc.svg" alt="EDC" width="44" height="44"/></div>
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/home.svg" alt="home" width="99" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/danbolig.svg" alt="danbolig" width="123" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo brand-logo-square" src="/images/brands/real.svg" alt="RealMæglerne" width="45" height="44"/></div>
+      </div>
+      <div class="marquee-set" aria-hidden="true">
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/lokalbolig.svg" alt="" width="147" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo brand-logo-square" src="/images/brands/edc.svg" alt="" width="44" height="44"/></div>
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/home.svg" alt="" width="99" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo" src="/images/brands/danbolig.svg" alt="" width="123" height="28"/></div>
+        <div class="brand-item"><img class="brand-logo brand-logo-square" src="/images/brands/real.svg" alt="" width="45" height="44"/></div>
       </div>
     </div>
   </div>
