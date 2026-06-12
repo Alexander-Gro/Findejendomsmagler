@@ -10,13 +10,17 @@
 
 const KLAVIYO_REVISION = '2024-10-15';
 
-// Klaviyo rejects non-E.164 phone numbers and fails the whole request, so
-// normalize Danish numbers (8 digits → +45) and drop anything else.
+// Normalize to E.164 (Klaviyo rejects anything else). Danish numbers are
+// 8 digits with first digit 2–9, optional +45/0045/45 prefix; full
+// international numbers (+ and 8–15 digits) pass through. Returns '' when
+// the value isn't a plausible phone number — the handler rejects those.
+// Mirrors isValidPhone in index.html.
 function toE164(phone) {
-  const digits = phone.replace(/[\s\-().]/g, '');
-  if (/^\+45\d{8}$/.test(digits)) return digits;
-  if (/^45\d{8}$/.test(digits)) return `+${digits}`;
-  if (/^\d{8}$/.test(digits)) return `+45${digits}`;
+  let digits = phone.replace(/[\s\-().]/g, '');
+  if (digits.startsWith('0045')) digits = `+45${digits.slice(4)}`;
+  if (/^\+45[2-9]\d{7}$/.test(digits)) return digits;
+  if (/^45[2-9]\d{7}$/.test(digits)) return `+${digits}`;
+  if (/^[2-9]\d{7}$/.test(digits)) return `+45${digits}`;
   if (/^\+\d{8,15}$/.test(digits)) return digits;
   return '';
 }
@@ -124,6 +128,9 @@ export default async function handler(req, res) {
   }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ ok: false, error: 'Invalid email' });
+  }
+  if (phone && !toE164(phone)) {
+    return res.status(400).json({ ok: false, error: 'Invalid phone' });
   }
 
   const fields = {

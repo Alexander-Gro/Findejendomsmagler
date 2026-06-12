@@ -532,9 +532,15 @@
     .marquee-track {
       display: flex;
       width: max-content;
-      animation: marqueeSlide 30s linear infinite;
+      /* Duration is set from JS based on real track width so the px/s speed
+         is identical on every screen size. 30s is the no-JS fallback. */
+      animation: marqueeSlide var(--marquee-duration, 30s) linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
     }
-    /* Two identical sets: -50% lands exactly on the start of set 2 → seamless loop */
+    /* Two identical sets: -50% lands exactly on the start of set 2 → seamless loop.
+       JS clones logos into both sets until each set covers the viewport width,
+       otherwise wide screens see empty space scroll in before the loop point. */
     .marquee-set {
       display: flex;
       align-items: center;
@@ -543,8 +549,8 @@
     }
     .marquee-outer:hover .marquee-track { animation-play-state: paused; }
     @keyframes marqueeSlide {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-50%, 0, 0); }
     }
     .brand-item {
       display: flex;
@@ -1021,6 +1027,14 @@
     .form-input::placeholder { color: var(--text-3); }
     select.form-input { cursor: pointer; appearance: none; -webkit-appearance: none; }
     .form-input[aria-invalid="true"], .form-input.invalid { border-color: var(--red); }
+    .field-error {
+      display: none;
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    .field-error.visible { display: block; }
 
     @media (max-width: 900px) {
       .cta-inner { grid-template-columns: 1fr; }
@@ -1665,7 +1679,8 @@
       </div>
       <div style="margin-bottom:20px">
         <label class="form-label" for="m-phone">Telefon</label>
-        <input type="tel" class="form-input" id="m-phone" placeholder="12 34 56 78" style="width:100%" aria-label="Telefon"/>
+        <input type="tel" class="form-input" id="m-phone" placeholder="22 34 56 78" style="width:100%" aria-label="Telefon" aria-describedby="m-phone-error"/>
+        <p class="field-error" id="m-phone-error" role="alert">Indtast et gyldigt dansk telefonnummer (8 cifre)</p>
       </div>
       <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true"/>
       <div style="display:flex;gap:10px">
@@ -2148,7 +2163,8 @@
       </div>
       <div style="margin-bottom:12px">
         <label class="form-label" for="cf-phone">Telefon</label>
-        <input type="tel" id="cf-phone" class="form-input" style="width:100%" placeholder="12 34 56 78" autocomplete="tel"/>
+        <input type="tel" id="cf-phone" class="form-input" style="width:100%" placeholder="22 34 56 78" autocomplete="tel" aria-describedby="cf-phone-error"/>
+        <p class="field-error" id="cf-phone-error" role="alert">Indtast et gyldigt dansk telefonnummer (8 cifre)</p>
       </div>
       <div style="margin-bottom:12px">
         <label class="form-label" for="cf-addr">Boligens adresse</label>
@@ -2271,6 +2287,53 @@
 <script>
 
 // =========================================================
+// 1. BRAND MARQUEE — constant speed on every screen size
+// =========================================================
+(function () {
+  const track = document.querySelector('.marquee-track');
+  if (!track) return;
+  const sets = track.querySelectorAll('.marquee-set');
+  if (sets.length !== 2) return;
+  const baseCount = sets[0].children.length;
+  const baseItems = Array.from(sets[0].children);
+  const SPEED = 35; // px per second, identical on all devices
+
+  function build() {
+    // Drop clones from a previous build before re-measuring.
+    sets.forEach(set => {
+      while (set.children.length > baseCount) set.lastElementChild.remove();
+    });
+    const setWidth = sets[0].getBoundingClientRect().width;
+    if (!setWidth) return;
+    // Each set must be at least viewport-wide, or empty space scrolls
+    // into view before the -50% loop point on large screens.
+    const copies = Math.max(0, Math.ceil(window.innerWidth / setWidth) - 1);
+    sets.forEach(set => {
+      for (let i = 0; i < copies; i++) {
+        baseItems.forEach(item => {
+          const clone = item.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          set.appendChild(clone);
+        });
+      }
+    });
+    const half = track.getBoundingClientRect().width / 2;
+    track.style.setProperty('--marquee-duration', (half / SPEED).toFixed(2) + 's');
+  }
+
+  build();
+  // SVG logos have width/height attributes, but re-run after load in case
+  // late layout (fonts, scrollbar) shifts the measured width.
+  window.addEventListener('load', build);
+
+  let marqueeResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(marqueeResizeTimer);
+    marqueeResizeTimer = setTimeout(build, 150);
+  }, { passive: true });
+})();
+
+// =========================================================
 // 2. FLOATING CTA REVEAL
 // =========================================================
 window.addEventListener('scroll', () => {
@@ -2299,6 +2362,34 @@ window.addEventListener('scroll', () => {
 // 5. MULTI-STEP MODAL
 // =========================================================
 let currentStep = 0;
+
+// Danish numbers: 8 digits, first digit 2–9, optional +45/0045/45 prefix.
+// Full international numbers (+ and 8–15 digits) are also accepted so a
+// seller with a foreign number isn't locked out. Mirrors toE164 in api/lead.js.
+function isValidPhone(value) {
+  let digits = value.replace(/[\s\-().]/g, '');
+  if (digits.startsWith('0045')) digits = '+45' + digits.slice(4);
+  if (/^(\+45|45)?[2-9]\d{7}$/.test(digits)) return true;
+  return /^\+\d{8,15}$/.test(digits);
+}
+
+function setPhoneValidity(input, errorEl, ok) {
+  input.classList.toggle('invalid', !ok);
+  input.setAttribute('aria-invalid', ok ? 'false' : 'true');
+  if (errorEl) errorEl.classList.toggle('visible', !ok);
+}
+
+// Hide the phone error as soon as the user types a valid number.
+['m-phone', 'cf-phone'].forEach(id => {
+  const input = document.getElementById(id);
+  const errorEl = document.getElementById(id + '-error');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    if (input.classList.contains('invalid') && isValidPhone(input.value.trim())) {
+      setPhoneValidity(input, errorEl, true);
+    }
+  });
+});
 
 async function submitLead(payload) {
   try {
@@ -2377,6 +2468,12 @@ async function submitForm() {
       inp.style.borderColor = '';
     }
   });
+  if (phoneEl.value.trim() && !isValidPhone(phoneEl.value.trim())) {
+    setPhoneValidity(phoneEl, document.getElementById('m-phone-error'), false);
+    valid = false;
+  } else if (phoneEl.value.trim()) {
+    setPhoneValidity(phoneEl, document.getElementById('m-phone-error'), true);
+  }
   if (!valid) return;
 
   const btn = document.querySelector('#step-1 .btn-blue');
@@ -2523,7 +2620,8 @@ menuBtn.addEventListener('click', () => {
 // =========================================================
 async function handleMainFormSubmit(btn) {
   const form = btn.closest('.form-card');
-  const inputs = form.querySelectorAll('input:not([type=hidden]), select');
+  // Exclude the honeypot — it must stay empty for real users.
+  const inputs = form.querySelectorAll('input:not([type=hidden]):not([name=website]), select');
   let valid = true;
   inputs.forEach(inp => {
     if (!inp.value.trim()) {
@@ -2533,6 +2631,13 @@ async function handleMainFormSubmit(btn) {
       inp.style.borderColor = '';
     }
   });
+  const cfPhone = document.getElementById('cf-phone');
+  if (cfPhone.value.trim() && !isValidPhone(cfPhone.value.trim())) {
+    setPhoneValidity(cfPhone, document.getElementById('cf-phone-error'), false);
+    valid = false;
+  } else if (cfPhone.value.trim()) {
+    setPhoneValidity(cfPhone, document.getElementById('cf-phone-error'), true);
+  }
   if (!valid) {
     btn.style.transform = 'translateX(-4px)';
     setTimeout(() => { btn.style.transform = 'translateX(4px)'; }, 80);
