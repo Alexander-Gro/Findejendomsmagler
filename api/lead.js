@@ -1,8 +1,87 @@
-// Vercel serverless function — receives lead form submissions and writes to Airtable.
+// Vercel serverless function — receives lead form submissions and writes to
+// Airtable (CRM/record store) and Klaviyo (email) as siblings.
 // Env vars required (set in Vercel dashboard):
 //   AIRTABLE_TOKEN     Personal access token with data.records:write
 //   AIRTABLE_BASE_ID   e.g. appXXXXXXXXXXXXXX
 //   AIRTABLE_TABLE     Table name, defaults to "Leads"
+//   KLAVIYO_API_KEY    Private API key (pk_...) with profile + list write scopes
+//   KLAVIYO_LIST_ID    List the lead is subscribed to (optional — profile is
+//                      still created/updated without it)
+
+const KLAVIYO_REVISION = '2024-10-15';
+
+// Klaviyo rejects non-E.164 phone numbers and fails the whole request, so
+// normalize Danish numbers (8 digits → +45) and drop anything else.
+function toE164(phone) {
+  const digits = phone.replace(/[\s\-().]/g, '');
+  if (/^\+45\d{8}$/.test(digits)) return digits;
+  if (/^45\d{8}$/.test(digits)) return `+${digits}`;
+  if (/^\d{8}$/.test(digits)) return `+45${digits}`;
+  if (/^\+\d{8,15}$/.test(digits)) return digits;
+  return '';
+}
+
+async function klaviyoFetch(path, payload) {
+  const r = await fetch(`https://a.klaviyo.com/api/${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY}`,
+      'Content-Type': 'application/json',
+      revision: KLAVIYO_REVISION,
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!r.ok) {
+    const text = await r.text();
+    throw new Error(`Klaviyo ${path} ${r.status}: ${text.slice(0, 500)}`);
+  }
+}
+
+// Create/update the profile with lead details, then subscribe it to the list.
+// Consent is collected on the form ("Ved at trykke på knappen giver du samtykke…").
+async function sendToKlaviyo(lead) {
+  const attributes = {};
+  if (lead.email) attributes.email = lead.email;
+  const phone = lead.phone ? toE164(lead.phone) : '';
+  if (phone) attributes.phone_number = phone;
+  if (lead.firstName) attributes.first_name = lead.firstName;
+  if (lead.lastName) attributes.last_name = lead.lastName;
+  attributes.properties = {
+    Source: lead.source,
+    'Property type': lead.propertyType,
+    Address: lead.address,
+  };
+
+  await klaviyoFetch('profile-import/', {
+    data: { type: 'profile', attributes },
+  });
+
+  const listId = process.env.KLAVIYO_LIST_ID;
+  if (!listId || !lead.email) return;
+
+  await klaviyoFetch('profile-subscription-bulk-create-jobs/', {
+    data: {
+      type: 'profile-subscription-bulk-create-job',
+      attributes: {
+        profiles: {
+          data: [{
+            type: 'profile',
+            attributes: {
+              email: lead.email,
+              subscriptions: {
+                email: { marketing: { consent: 'SUBSCRIBED' } },
+              },
+            },
+          }],
+        },
+        historical_import: false,
+      },
+      relationships: {
+        list: { data: { type: 'list', id: listId } },
+      },
+    },
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -83,6 +162,15 @@ export default async function handler(req, res) {
       const text = await r.text();
       console.error('Airtable error', r.status, text);
       return res.status(502).json({ ok: false, error: 'Upstream error' });
+    }
+
+    // Klaviyo failure must not lose the lead — it's already in Airtable.
+    if (process.env.KLAVIYO_API_KEY) {
+      try {
+        await sendToKlaviyo({ source, propertyType, address, firstName, lastName, email, phone });
+      } catch (err) {
+        console.error('Klaviyo error', err);
+      }
     }
 
     return res.status(200).json({ ok: true });
