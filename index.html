@@ -1696,7 +1696,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input type="text" id="m-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true"/>
       <div style="display:flex;gap:10px">
         <button class="btn-outline" onclick="prevStep()" type="button">← Tilbage</button>
-        <button class="btn-blue" style="flex:1;padding:14px" onclick="submitForm()" type="button">Få mine 3 gratis tilbud →</button>
+        <button class="btn-blue" id="submit" style="flex:1;padding:14px" onclick="submitForm()" type="button">Få mine 3 gratis tilbud →</button>
       </div>
       <p style="font-size:11px;color:#AEAEB2;text-align:center;margin-top:12px;line-height:1.5;">
         Ved at trykke på knappen giver du samtykke til, at FindEjendomsmægler.nu må kontakte dig om dine mæglertilbud og sende dig relevante tips om boligsalg pr. e-mail. Du kan afmelde dig når som helst. Læs vores <a href="/privatlivspolitik" style="color:#AEAEB2;text-decoration:underline">privatlivspolitik</a>.
@@ -2193,7 +2193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </select>
       </div>
       <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true"/>
-      <button class="btn-blue" style="width:100%;padding:16px;font-size:15px" onclick="handleMainFormSubmit(this)">Få mine 3 gratis mæglertilbud →</button>
+      <button class="btn-blue" id="submit" style="width:100%;padding:16px;font-size:15px" onclick="handleMainFormSubmit(this)">Få mine 3 gratis mæglertilbud →</button>
       <p style="font-size:11px;color:#AEAEB2;text-align:center;margin-top:12px;line-height:1.5;">
         Ved at trykke på knappen giver du samtykke til, at FindEjendomsmægler.nu må kontakte dig om dine mæglertilbud og sende dig relevante tips om boligsalg pr. e-mail. Du kan afmelde dig når som helst. Læs vores <a href="/privatlivspolitik" style="color:#AEAEB2;text-decoration:underline">privatlivspolitik</a>.
       </p>
@@ -2513,6 +2513,11 @@ async function submitForm() {
     setTimeout(() => { btn.style.background = ''; btn.textContent = originalText; }, 2500);
     return;
   }
+
+  // Successful lead submission — notify Google Tag Manager.
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'lead_submit', form: 'modal' });
+
   nextStep();
 }
 
@@ -2679,6 +2684,10 @@ async function handleMainFormSubmit(btn) {
     setTimeout(() => { btn.style.background = ''; btn.textContent = originalText; }, 2500);
     return;
   }
+
+  // Successful lead submission — notify Google Tag Manager.
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'lead_submit', form: 'main-form' });
 
   btn.textContent = 'Tak! Vi kontakter dig inden for 24 timer';
   btn.style.background = '#34C759';
