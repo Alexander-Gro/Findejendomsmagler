@@ -187,7 +187,7 @@
     .header-phone {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 4px;
       font-size: 14px;
       font-weight: 600;
       color: inherit;
@@ -195,7 +195,6 @@
       white-space: nowrap;
       transition: color var(--transition);
     }
-    .header-phone svg { flex-shrink: 0; opacity: 0.85; }
     header.scrolled .header-phone:hover { color: var(--blue); }
     header:not(.scrolled) .header-phone:hover { color: #9DC3E8; }
 
@@ -251,24 +250,19 @@
     }
     .mobile-menu a:last-of-type { border-bottom: none; }
     .mobile-menu .btn-blue { margin-top: 12px; width: 100%; }
-    .mobile-menu .menu-phone {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      color: var(--blue);
-    }
+    .mobile-menu .menu-phone { font-weight: 600; color: var(--blue); }
 
     @media (max-width: 768px) {
       nav { display: none; }
       .mobile-menu-btn { display: flex; }
-      header .btn-blue:not(.btn-sm) { display: none; }
-      .header-actions { gap: 12px; }
-      .header-phone span { display: none; }
-      .header-phone svg { opacity: 1; }
+      .header-actions { gap: 14px; }
+      header .btn-blue { display: none; }
     }
     @media (max-width: 480px) {
-      header .btn-blue { display: none; }
+      .logo { font-size: 16px; }
+      .header-phone { font-size: 13px; }
+      .header-phone .hp-cc { display: none; }
+      .header-actions { gap: 10px; }
     }
 
     /* =========================================================
@@ -1123,55 +1117,172 @@
        FOOTER
     ========================================================= */
     footer {
+      position: relative;
       background: var(--bg-dark);
-      padding: 56px 0 32px;
-      border-top: 1px solid rgba(255,248,235,0.07);
+      padding: clamp(72px, 9vw, 120px) 0 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      overflow: hidden;
+      isolation: isolate;
     }
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      flex-wrap: wrap;
-      gap: 20px;
+    footer::before {
+      content: '';
+      position: absolute;
+      inset: -40% 40% auto -10%;
+      height: 70%;
+      background: radial-gradient(60% 60% at 30% 50%, rgba(0,88,184,0.20), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
     }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: clamp(36px, 4.5vw, 72px);
+      align-items: start;
+      padding-bottom: clamp(48px, 6vw, 76px);
+    }
+
+    .footer-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.34);
+      margin-bottom: 22px;
+    }
+
+    /* --- Contact column --- */
     .footer-logo {
-      font-size: 18px;
+      font-family: var(--font-display);
+      font-size: 20px;
       font-weight: 800;
       color: #fff;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.02em;
     }
     .footer-logo em { color: #8DB8D8; font-style: normal; }
-    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 6px; }
-    .footer-phone {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      font-size: 16px;
+    .footer-tagline {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+      margin-top: 10px;
+      max-width: 30ch;
+    }
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: clamp(26px, 3vw, 36px);
+    }
+    .footer-contact a {
+      position: relative;
+      font-family: var(--font-display);
+      font-size: clamp(21px, 2.1vw, 29px);
       font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.34;
       color: #fff;
       transition: color var(--transition);
     }
-    .footer-phone:hover { color: #8DB8D8; }
-    .footer-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
+    .footer-contact a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.12em;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 420ms cubic-bezier(0.22,0.68,0,1);
     }
-    .footer-links a {
-      font-size: 14px;
-      color: rgba(255,255,255,0.72);
+    .footer-contact a:hover { color: #8DB8D8; }
+    .footer-contact a:hover::after { transform: scaleX(1); }
+
+    /* --- Link columns --- */
+    .footer-col { display: block; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+    .footer-col a {
+      display: inline-flex;
+      align-items: center;
+      font-size: 15px;
+      color: rgba(255,255,255,0.60);
       transition: color var(--transition);
     }
-    .footer-links a:hover { color: #fff; }
+    .footer-col a::before {
+      content: '';
+      width: 0;
+      height: 1px;
+      margin-right: 0;
+      background: #8DB8D8;
+      transition: width 300ms cubic-bezier(0.22,0.68,0,1), margin-right 300ms cubic-bezier(0.22,0.68,0,1);
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-col a:hover::before { width: 14px; margin-right: 9px; }
+
+    /* --- Back to top --- */
+    .footer-totop {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.75);
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .footer-totop svg { transition: transform 320ms cubic-bezier(0.22,0.68,0,1); }
+    .footer-totop:hover {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+    .footer-totop:hover svg { transform: translateY(-3px); }
+
+    /* --- Oversized wordmark --- */
+    .footer-wordmark {
+      padding: clamp(8px, 1.6vw, 20px) 0 clamp(20px, 2.4vw, 34px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: clamp(40px, 5vw, 64px);
+    }
+    .footer-wordmark svg { width: 100%; height: auto; display: block; overflow: hidden; }
+    .footer-wordmark text {
+      font-family: var(--font-display);
+      font-size: 116px;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      fill: rgba(255,255,255,0.055);
+    }
+    .footer-wordmark .wm-accent { fill: rgba(141,184,216,0.11); }
+
+    /* --- Bottom bar --- */
     .footer-bottom {
-      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 32px;
+      padding: 22px 0 clamp(28px, 4vw, 40px);
+      border-top: 1px solid rgba(255,255,255,0.08);
       font-size: 13px;
-      color: rgba(255,255,255,0.55);
-      line-height: 1.65;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.6;
+    }
+    .footer-bottom p { margin: 0; }
+
+    @media (max-width: 1040px) {
+      .footer-top {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        row-gap: clamp(40px, 6vw, 56px);
+      }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-totop { grid-column: 2; justify-self: end; align-self: end; }
+    }
+    @media (max-width: 560px) {
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-totop { grid-column: 1; justify-self: start; }
+      footer { padding-bottom: 72px; }
     }
 
     /* =========================================================
@@ -1621,8 +1732,7 @@
 
       .compare-col { padding: 24px 18px; }
 
-      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
-      footer { padding-bottom: max(32px, env(safe-area-inset-bottom, 32px)); }
+      footer { padding-bottom: max(72px, calc(env(safe-area-inset-bottom, 0px) + 72px)); }
 
       .faq-trigger { font-size: 15px; }
 
@@ -1781,10 +1891,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <nav aria-label="Primær navigation">
   </nav>
   <div class="header-actions">
-    <a href="tel:+4542730464" class="header-phone" aria-label="Ring til os på +45 42 73 04 64">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      <span>+45 42 73 04 64</span>
-    </a>
+    <a href="tel:+4542730464" class="header-phone" aria-label="Ring til os på +45 42 73 04 64"><span class="hp-cc">+45</span><span>42 73 04 64</span></a>
     <button class="btn-blue btn-sm" onclick="openModal()" aria-label="Få 3 gratis tilbud">Få 3 gratis tilbud</button>
     <button class="mobile-menu-btn" aria-label="Åbn menu" id="menu-btn" aria-expanded="false" aria-controls="mobile-menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -1792,7 +1899,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </header>
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-  <a href="tel:+4542730464" class="menu-phone" onclick="closeMobileMenu()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>+45 42 73 04 64</span></a>
+  <a href="tel:+4542730464" class="menu-phone" onclick="closeMobileMenu()"><span>+45 42 73 04 64</span></a>
   <button class="btn-blue" onclick="closeMobileMenu();openModal()" style="width:100%;padding:14px;font-size:15px;margin-top:12px;">Få 3 gratis tilbud</button>
 </div>
 
@@ -1954,7 +2061,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- =========================================================
      PROTECT SECTION (Point 1), Din boligadvokat
 ========================================================= -->
-<section class="protect-section">
+<section class="protect-section" id="tryghed">
   <div class="container">
     <div class="protect-intro">
       <div class="reveal">
@@ -2009,7 +2116,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- =========================================================
      COMPARISON SECTION (Point 4), Uden os vs. Med os
 ========================================================= -->
-<section class="compare-section">
+<section class="compare-section" id="sammenlign">
   <div class="container">
     <h2 class="section-h2 reveal">Hvad sker der, hvis du finder mægler selv?</h2>
     <p class="section-desc reveal reveal-d1">De fleste sælgere ved ikke, hvad de går glip af, eller hvad de betaler for meget for.</p>
@@ -2078,7 +2185,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- =========================================================
      SCREENING SECTION (Point 5), Godkendt mægler
 ========================================================= -->
-<section class="screen-section">
+<section class="screen-section" id="screening">
   <div class="container">
     <h2 class="section-h2 reveal">Sådan screener vi dine mæglere</h2>
     <p class="section-desc reveal reveal-d1">Kun mæglere der består alle 5 kriterier kommer igennem, resten fravælges automatisk.</p>
@@ -2252,7 +2359,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- =========================================================
      FAQ
 ========================================================= -->
-<section class="faq-section">
+<section class="faq-section" id="faq">
   <div class="container" style="width:min(880px, 100% - 48px)">
     <h2 class="section-h2 reveal" style="text-align:center">Ofte stillede spørgsmål</h2>
     <div class="faq-list reveal reveal-d2">
@@ -2318,22 +2425,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      FOOTER
 ========================================================= -->
 <footer>
-  <div class="footer-inner container">
-    <div>
-      <div class="footer-logo">find<em>ejendoms</em>mægler.nu</div>
-      <div class="footer-tagline">Vi finder den rigtige mægler til dig</div>
-      <a href="tel:+4542730464" class="footer-phone" aria-label="Ring til os på +45 42 73 04 64"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>+45 42 73 04 64</span></a>
+  <div class="container">
+
+    <div class="footer-top">
+
+      <div class="footer-brand reveal">
+        <div class="footer-logo">find<em>ejendoms</em>mægler.nu</div>
+        <p class="footer-tagline">Uafhængig matchingtjeneste, der finder den rigtige mægler til din bolig.</p>
+        <div class="footer-contact">
+          <a href="tel:+4542730464">+45 42 73 04 64</a>
+          <a href="mailto:info@findejendomsmægler.nu">info@findejendomsmægler.nu</a>
+        </div>
+      </div>
+
+      <nav class="footer-col reveal reveal-d1" aria-label="Sektioner">
+        <span class="footer-label">Udforsk</span>
+        <ul>
+          <li><a href="#steps-sec">Sådan virker det</a></li>
+          <li><a href="#sammenlign">Selv eller med hjælp</a></li>
+          <li><a href="#screening">Vores screening</a></li>
+          <li><a href="#faq">Ofte stillede spørgsmål</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col reveal reveal-d2" aria-label="Juridisk">
+        <span class="footer-label">Juridisk</span>
+        <ul>
+          <li><a href="/privatlivspolitik">Privatlivspolitik</a></li>
+          <li><a href="/privatlivspolitik#vilkaar">Handelsbetingelser</a></li>
+          <li><a href="/privatlivspolitik#cookies">Cookiepolitik</a></li>
+        </ul>
+      </nav>
+
+      <a href="#hero" class="footer-totop" aria-label="Tilbage til toppen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </a>
+
     </div>
-    <nav class="footer-links" aria-label="Footer navigation">
-      <a href="/privatlivspolitik">Privatlivspolitik</a>
-      <a href="/privatlivspolitik#vilkaar">Handelsbetingelser</a>
-      <a href="/privatlivspolitik#cookies">Cookiepolitik</a>
-    </nav>
-  </div>
-  <div class="footer-bottom container">
-    <p>© 2025 FindEjendomsmægler.nu · CVR: 42132616 · info@findejendomsmægler.nu</p>
-    <p style="margin-top:6px">FindEjendomsmægler.nu er en uafhængig matchingtjeneste og er ikke tilknyttet nogen specifik mæglerkæde.</p>
-    <p style="margin-top:8px;opacity:0.6">Lavet med kærlighed i Danmark</p>
+
+    <div class="footer-wordmark reveal" aria-hidden="true">
+      <svg viewBox="-6 0 1212 150" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
+        <text x="0" y="106" textLength="1200" lengthAdjust="spacingAndGlyphs">find<tspan class="wm-accent">ejendoms</tspan>mægler.nu</text>
+      </svg>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 FindEjendomsmægler.nu · CVR 42132616</p>
+    </div>
+
   </div>
 </footer>
 
