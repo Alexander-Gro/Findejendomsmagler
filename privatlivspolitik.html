@@ -93,6 +93,25 @@
       min-height: 38px;
     }
     .btn-blue:hover { background: var(--blue-hover); border-color: var(--blue-hover); text-decoration: none; }
+    .header-actions { display: flex; align-items: center; gap: 18px; }
+    .header-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.005em;
+      white-space: nowrap;
+      transition: color var(--transition);
+    }
+    .header-phone svg { flex-shrink: 0; opacity: 0.85; }
+    .header-phone:hover { color: var(--blue); text-decoration: none; }
+    @media (max-width: 560px) {
+      .header-actions { gap: 12px; }
+      .header-phone span { display: none; }
+      .header-phone svg { opacity: 1; }
+    }
 
     /* Page content */
     .legal {
@@ -211,6 +230,17 @@
     }
     .footer-logo em { color: #6EAEFF; font-style: normal; }
     .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 6px; }
+    .footer-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      transition: color var(--transition);
+    }
+    .footer-phone:hover { color: #8DB8D8; text-decoration: none; }
     .footer-links {
       display: flex;
       align-items: center;
@@ -243,7 +273,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header id="site-header">
   <a href="/" class="logo" aria-label="FindEjendomsmægler hjem">find<em>ejendoms</em>mægler.nu</a>
-  <a href="/" class="btn-blue">Tilbage til forsiden</a>
+  <div class="header-actions">
+    <a href="tel:+4542730464" class="header-phone" aria-label="Ring til os på +45 42 73 04 64">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>+45 42 73 04 64</span>
+    </a>
+    <a href="/" class="btn-blue">Tilbage til forsiden</a>
+  </div>
 </header>
 
 <main class="legal">
@@ -363,6 +399,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div>
       <div class="footer-logo">find<em>ejendoms</em>mægler.nu</div>
       <div class="footer-tagline">Vi finder den rigtige mægler til dig</div>
+      <a href="tel:+4542730464" class="footer-phone" aria-label="Ring til os på +45 42 73 04 64"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>+45 42 73 04 64</span></a>
     </div>
     <nav class="footer-links" aria-label="Footer navigation">
       <a href="/privatlivspolitik">Privatlivspolitik</a>
