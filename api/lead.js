@@ -93,6 +93,31 @@ async function sendToKlaviyo(lead) {
   });
 }
 
+async function sendToAirtable(fields) {
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const table = process.env.AIRTABLE_TABLE || 'Leads';
+  const r = await fetch(
+    `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ records: [{ fields }], typecast: true }),
+    },
+  );
+  const text = await r.text();
+  if (!r.ok) {
+    throw new Error(`Airtable ${r.status}: ${text.slice(0, 500)}`);
+  }
+  try {
+    return JSON.parse(text)?.records?.[0]?.id || '';
+  } catch {
+    return '';
+  }
+}
+
 // Upsert rather than create: GoHighLevel dedupes on email/phone within the
 // location, so a seller who submits two forms updates one contact instead of
 // failing as a duplicate. Source and property type ride along as tags, which
@@ -148,7 +173,6 @@ export default async function handler(req, res) {
 
   const token = process.env.AIRTABLE_TOKEN;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  const table = process.env.AIRTABLE_TABLE || 'Leads';
 
   if (!token || !baseId) {
     return res.status(500).json({ ok: false, error: 'Server not configured' });
@@ -204,46 +228,39 @@ export default async function handler(req, res) {
     if (fields[k] === '' || fields[k] == null) delete fields[k];
   }
 
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`;
+  const lead = { source, propertyType, address, firstName, lastName, email, phone };
+
+  // Every destination is independent and they run together. Airtable used to
+  // gate the other two: when it started returning 429 for exceeding its
+  // monthly API quota, the handler returned early and the lead never reached
+  // GoHighLevel or Klaviyo either. One destination being down, rate-limited or
+  // over quota must only ever cost us that destination.
+  const destinations = [['Airtable', () => sendToAirtable(fields)]];
+  if (process.env.KLAVIYO_API_KEY) destinations.push(['Klaviyo', () => sendToKlaviyo(lead)]);
+  else console.warn('[lead] Klaviyo SKIPPED — KLAVIYO_API_KEY not set');
+  if (process.env.GHL_API_KEY) destinations.push(['GoHighLevel', () => sendToGoHighLevel(lead)]);
+  else console.warn('[lead] GoHighLevel SKIPPED — GHL_API_KEY not set');
 
   try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        records: [{ fields }],
-        typecast: true,
-      }),
-    });
+    const outcomes = await Promise.allSettled(destinations.map(([, send]) => send()));
 
-    if (!r.ok) {
-      const text = await r.text();
-      console.error('Airtable error', r.status, text);
-      return res.status(502).json({ ok: false, error: 'Upstream error' });
-    }
-
-    // A downstream failure must not lose the lead — it's already in Airtable —
-    // so each sibling is logged and swallowed. They run together so the visitor
-    // waits for the slowest one rather than the sum.
-    const lead = { source, propertyType, address, firstName, lastName, email, phone };
-    const siblings = [];
-    if (process.env.KLAVIYO_API_KEY) siblings.push(['Klaviyo', sendToKlaviyo]);
-    else console.warn('[lead] Klaviyo SKIPPED — KLAVIYO_API_KEY not set');
-    if (process.env.GHL_API_KEY) siblings.push(['GoHighLevel', sendToGoHighLevel]);
-    else console.warn('[lead] GoHighLevel SKIPPED — GHL_API_KEY not set');
-
-    const outcomes = await Promise.allSettled(siblings.map(([, send]) => send(lead)));
+    let delivered = 0;
     outcomes.forEach((outcome, i) => {
-      const name = siblings[i][0];
+      const name = destinations[i][0];
       if (outcome.status === 'rejected') {
         console.error(`[lead] ${name} FAILED:`, outcome.reason?.message || outcome.reason);
       } else {
-        console.log(`[lead] ${name} OK${outcome.value ? ` contactId=${outcome.value}` : ''}`);
+        delivered++;
+        console.log(`[lead] ${name} OK${outcome.value ? ` id=${outcome.value}` : ''}`);
       }
     });
+
+    // Only a lead that reached nothing at all is worth showing the visitor an
+    // error for — otherwise it is recorded somewhere and can be reconciled.
+    if (!delivered) {
+      console.error('[lead] LOST — every destination failed');
+      return res.status(502).json({ ok: false, error: 'Upstream error' });
+    }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
