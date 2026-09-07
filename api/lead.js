@@ -128,9 +128,16 @@ async function sendToGoHighLevel(lead) {
     },
     body: JSON.stringify(payload),
   });
+  const text = await r.text();
   if (!r.ok) {
-    const text = await r.text();
     throw new Error(`GoHighLevel upsert ${r.status}: ${text.slice(0, 500)}`);
+  }
+  // Returned so the handler can log a contact id — proof the write landed, and
+  // which record to open in GHL when someone reports a missing lead.
+  try {
+    return JSON.parse(text)?.contact?.id || '';
+  } catch {
+    return '';
   }
 }
 
@@ -224,12 +231,17 @@ export default async function handler(req, res) {
     const lead = { source, propertyType, address, firstName, lastName, email, phone };
     const siblings = [];
     if (process.env.KLAVIYO_API_KEY) siblings.push(['Klaviyo', sendToKlaviyo]);
+    else console.warn('[lead] Klaviyo SKIPPED — KLAVIYO_API_KEY not set');
     if (process.env.GHL_API_KEY) siblings.push(['GoHighLevel', sendToGoHighLevel]);
+    else console.warn('[lead] GoHighLevel SKIPPED — GHL_API_KEY not set');
 
     const outcomes = await Promise.allSettled(siblings.map(([, send]) => send(lead)));
     outcomes.forEach((outcome, i) => {
+      const name = siblings[i][0];
       if (outcome.status === 'rejected') {
-        console.error(`${siblings[i][0]} error`, outcome.reason);
+        console.error(`[lead] ${name} FAILED:`, outcome.reason?.message || outcome.reason);
+      } else {
+        console.log(`[lead] ${name} OK${outcome.value ? ` contactId=${outcome.value}` : ''}`);
       }
     });
 
