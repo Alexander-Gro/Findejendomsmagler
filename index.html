@@ -1813,7 +1813,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="prop-type-label">Andelsbolig</div>
         </button>
       </div>
-      <input type="text" class="form-input" id="m-address" placeholder="Din boligsadresse" style="width:100%;margin-top:8px" aria-label="Boligsadresse"/>
+      <p class="field-error" id="m-type-error" role="alert">Vælg din boligtype</p>
+      <input type="text" class="form-input" id="m-address" placeholder="Din boligsadresse" style="width:100%;margin-top:8px" aria-label="Boligsadresse" aria-describedby="m-address-error" required/>
+      <p class="field-error" id="m-address-error" role="alert">Skriv adressen på din bolig</p>
       <button class="btn-blue" style="width:100%;margin-top:16px;padding:14px;font-size:15px" onclick="nextStep()">Fortsæt →</button>
     </div>
 
@@ -2615,6 +2617,11 @@ function openModal() {
       b.classList.toggle('selected', b.dataset.value === heroType.value);
     });
   }
+  // A reopened modal starts clean — errors from a previous visit are stale.
+  document.getElementById('m-type-error').classList.remove('visible');
+  document.getElementById('m-address-error').classList.remove('visible');
+  mAddr.classList.remove('invalid');
+  mAddr.setAttribute('aria-invalid', 'false');
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2624,7 +2631,33 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+// Boligtype and adresse are what the whole lead is worth — a mægler can do
+// nothing with a name and a phone number alone — so step 1 will not advance
+// without them. They used to be skippable, which is how leads reached the CRM
+// with both blank.
+function validatePropertyStep() {
+  const type = document.querySelector('.prop-type-btn.selected');
+  const addr = document.getElementById('m-address');
+  const typeError = document.getElementById('m-type-error');
+  const addrError = document.getElementById('m-address-error');
+
+  typeError.classList.toggle('visible', !type);
+
+  const addrOk = !!addr.value.trim();
+  addr.classList.toggle('invalid', !addrOk);
+  addr.setAttribute('aria-invalid', addrOk ? 'false' : 'true');
+  addrError.classList.toggle('visible', !addrOk);
+
+  if (!type) return false;
+  if (!addrOk) {
+    addr.focus();
+    return false;
+  }
+  return true;
+}
+
 function nextStep() {
+  if (currentStep === 0 && !validatePropertyStep()) return;
   if (currentStep < 2) {
     currentStep++;
     updateStep();
@@ -2670,6 +2703,14 @@ async function submitForm() {
     setPhoneValidity(phoneEl, document.getElementById('m-phone-error'), true);
   }
   if (!valid) return;
+
+  // Belt and braces: step 1 gates these, but nothing may leave the browser
+  // without them — send the visitor back rather than post a half-empty lead.
+  if (!validatePropertyStep()) {
+    currentStep = 0;
+    updateStep();
+    return;
+  }
 
   const btn = document.querySelector('#step-1 .btn-blue');
   const originalText = btn.textContent;
@@ -2721,8 +2762,19 @@ document.querySelectorAll('.prop-type-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.prop-type-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+    document.getElementById('m-type-error').classList.remove('visible');
   });
 });
+
+const mAddressInput = document.getElementById('m-address');
+if (mAddressInput) {
+  mAddressInput.addEventListener('input', () => {
+    if (!mAddressInput.value.trim()) return;
+    mAddressInput.classList.remove('invalid');
+    mAddressInput.setAttribute('aria-invalid', 'false');
+    document.getElementById('m-address-error').classList.remove('visible');
+  });
+}
 
 // =========================================================
 // 7. SCROLL REVEAL

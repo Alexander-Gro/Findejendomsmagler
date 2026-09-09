@@ -6,6 +6,9 @@
 //
 // Token needs scope contacts.readonly for the read check (contacts.write is
 // what /api/lead actually uses — a token with only write still works there).
+// The custom field check needs locations/customFields.readonly; /api/lead also
+// wants .write so it can create "Boligtype" and "Boligadresse" if they are
+// missing.
 
 const GHL_VERSION = '2021-07-28';
 const BASE = 'https://services.leadconnectorhq.com';
@@ -81,6 +84,27 @@ function explain(status) {
     console.log(`  Raw: ${read.text.slice(0, 300)}\n`);
   }
 
+  // /api/lead resolves (and creates) the "Boligtype" and "Boligadresse" contact
+  // custom fields. Without these scopes the lead still lands, but those two
+  // values only survive as tags, the standard address field and the note.
+  console.log('Custom field check (GET /locations/<id>/customFields)…');
+  const cf = await call('GET', `/locations/${locationId}/customFields?model=contact`);
+  if (cf.ok) {
+    let names = [];
+    try { names = (JSON.parse(cf.text)?.customFields || []).map(f => f.name); } catch { /* shape changed */ }
+    console.log('  \u2713 readable — contact custom fields: ' + (names.join(', ') || '(none yet)'));
+    for (const want of ['Boligtype', 'Boligadresse']) {
+      const has = names.some(n => String(n).toLowerCase() === want.toLowerCase());
+      console.log(`  ${has ? '\u2713' : '\u2022'} ${want}: ${has ? 'exists' : 'missing — /api/lead will create it on the next lead'}`);
+    }
+    console.log('');
+  } else {
+    console.log(`  \u2717 HTTP ${cf.status} — token lacks locations/customFields.readonly.`);
+    console.log('  Add locations/customFields.readonly + .write to the Private');
+    console.log('  Integration, or set GHL_FIELD_PROPERTY_TYPE / GHL_FIELD_ADDRESS');
+    console.log('  to existing field ids. Leads still arrive either way.\n');
+  }
+
   if (!process.argv.includes('--live')) {
     console.log('Run again with --live to upsert a real test contact.');
     process.exit(read.ok ? 0 : 1);
@@ -94,7 +118,10 @@ function explain(status) {
     email: 'api-check@example.invalid',
     source: 'api-test',
     country: 'DK',
-    tags: ['api-test'],
+    address1: 'Eksempelvej 1',
+    postalCode: '2000',
+    city: 'Frederiksberg',
+    tags: ['api-test', 'Villa'],
   });
   if (write.ok) {
     console.log('  ✓ contact upserted — find "Test Testsen" in GHL and delete it.');
