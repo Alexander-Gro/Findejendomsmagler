@@ -23,9 +23,11 @@ const DESIRED_FIELDS = [
   { name: 'Source', type: 'singleSelect', options: { choices: [
     { name: 'hero' }, { name: 'modal' }, { name: 'main-form' }, { name: 'exit-popup' },
   ]}},
+  // Must match the boligtyper the forms offer — scripts/test-forms.mjs checks
+  // the three forms against each other, this list is the fourth copy.
   { name: 'Property type', type: 'singleSelect', options: { choices: [
     { name: 'Villa' }, { name: 'Rækkehus' }, { name: 'Lejlighed' },
-    { name: 'Ejerlejlighed' }, { name: 'Fritidshus' }, { name: 'Andelsbolig' },
+    { name: 'Fritidshus' }, { name: 'Andelsbolig' },
   ]}},
   { name: 'Address', type: 'singleLineText' },
   { name: 'First name', type: 'singleLineText' },
